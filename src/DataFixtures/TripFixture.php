@@ -6,6 +6,7 @@ use App\Entity\Address;
 use App\Entity\Site;
 use App\Entity\Trip;
 use App\Entity\User;
+use App\Enum\StateEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -26,6 +27,7 @@ class TripFixture extends Fixture implements OrderedFixtureInterface
         ->setCity($faker->city())
         ->setPostcode($faker->postcode())
         ->setLatitude($faker->latitude())
+            ->setState(StateEnum::CREATED)
         ->setLongitude($faker->longitude());
 
         $manager->persist($address);
