@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Trip;
+use App\Enum\StateEnum;
 use App\Form\FilterTripType;
 use App\Form\TripType;
 use App\Repository\TripRepository;
@@ -58,6 +59,9 @@ final class TripController extends AbstractController
          */
         $AddressHisCreated = $form->get('choiceMethodAddress')->getData();
         if ($form->isSubmitted() && $form->isValid()) {
+            $isPublished = $request->request->get('published');
+
+
             $address = $form->get('address')->getData();
             if ($AddressHisCreated) {
                 $newAddress = $form->get('newAddress')->getData();
@@ -65,6 +69,10 @@ final class TripController extends AbstractController
                 $address = $newAddress;
             }
             $trip->setAddress($address);
+            $trip->setState(StateEnum::CREATED);
+            if($isPublished === 'true') {
+                $trip->setState(null);
+            }
             $trip->setOrganisator($this->getUser());
             $this->entityManager->persist($trip);
             $this->entityManager->flush();

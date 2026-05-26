@@ -9,8 +9,11 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -32,7 +35,7 @@ class TripType extends AbstractType
             ->add('choiceMethodAddress', ChoiceType::class, [
                 'mapped' => false,
                 'choices' => [
-                    'Choisir' => false,
+                    'Choisir ' => false,
                     'Créer' => true,
                 ],
                 'data' => false,
@@ -48,7 +51,13 @@ class TripType extends AbstractType
                 'mapped' => false,
                 'label' => 'Créer une adresse',
                 'required' => false,
-            ]);
+            ])
+            ->add('published', HiddenType::class, [
+                'data' => true,
+                'mapped' => false,
+                'required' => false,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

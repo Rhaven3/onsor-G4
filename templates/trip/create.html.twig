@@ -12,8 +12,11 @@
 
 {% block body %}
     {% embed 'views/form-template.html.twig' with {form : form} %}
-        {% block form_title %}Create a Trip{% endblock %}
-        {% block button_label %}Create{% endblock %}
+        {% block form_title %}{% endblock %}
+        {% block button_submit_label %}Create{% endblock %}
+        {% block button2 %}
+            <button name="published" value="true" class="bg-green-500 hover:bg-green-700 flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow">Publier</button>
+        {% endblock %}
     {% endembed %}
 
 {#    Affichage carte Leaflet #}
