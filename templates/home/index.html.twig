@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Onsor - Accueil{% endblock %}
+
+{% block body %}
+    <h1 class="text-[2.5rem] mb-8">Bienvenue sur Onsor</h1>
+
+    <p class="mb-15">Le site qui vous fait prendre l'air !</p>
+
+    <div class="lg:flex lg:flex-row">
+        {% for trip in trips %}
+            <div
+                class="basis-1/4 mx-1 border mb-1 border-gray-400 lg:border-gray-400 bg-white rounded-b lg:rounded-xl p-4 flex flex-col justify-between leading-normal">
+                <a href="{{ path('trip_detail', {"id" : trip.id}) }}">
+                    <div class="mb-8">
+                        <p class="text-sm text-gray-600 flex items-center">
+                        </p>
+                        <div class="text-gray-900 font-bold text-xl mb-2">{{ trip.name }}</div>
+                        <div class="text-gray-900 italic text-sm mb-2">{{ trip.startDate | date("d/m/Y") }}</div>
+                        <p class="text-gray-700 text-base">{{ trip.description }}</p>
+                    </div>
+                    <div class="flex items-center">
+                        <img class="w-10 h-10 rounded-full mr-4"
+                            {% if trip.getOrganisator.getPhoto is not null %}
+                                src="{{ asset('assets/img/profil/' ~ trip.getOrganisator.getPhoto) }}"
+                            {% else %}
+                                src="{{ asset('defaultContent/default_pp_user.jpg') }}"
+                            {% endif %}
+                             alt="Avatar of {{ trip.organisator.firstName ~ " " ~ trip.organisator.lastName }}">
+                        <div class="text-sm">
+                            <p class="text-gray-900 leading-none">{{ trip.organisator.firstName ~ " " ~ trip.organisator.lastName }}</p>
+                            <p class="text-gray-600">Organisateur</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

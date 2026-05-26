@@ -1,0 +1,24 @@
+{% form_theme form 'views/form-theme.html.twig' %}
+<div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
+        {% block form_title %}{% endblock %}
+    </h2>
+</div>
+<div class="mt-10 sm:mx-auto w-full lg:max-w-[500px]">
+    {{ form_start(form, {
+        attr: {
+            class: 'space-y-6'
+        }
+    }) }}
+    {{ form_widget(form) }}
+    {{ form_errors(form) }}
+    <div>
+        <button
+            type="submit"
+            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500"
+        >
+            {% block button_label %}{% endblock %}
+        </button>
+    </div>
+    {{ form_end(form) }}
+</div>

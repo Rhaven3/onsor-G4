@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+#form-error > ul {
+    list-style: disc;
+    margin-left: 30px;
+}

@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    {% form_theme registrationForm 'views/form-theme.html.twig' %}
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
+            Inscription
+        </h2>
+    </div>
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        {{ form_start(registrationForm, {
+            attr: {
+                class: 'space-y-6',
+                enctype: 'multipart/form-data'
+            }
+        }) }}
+        <div class="flex">
+            {{ form_label(registrationForm.agreeTerms, "J'accepte les conditions", {
+                label_attr: {
+                    class: 'block text-sm font-medium text-gray-900 text-nowrap'
+                }
+            }) }}
+            {{ form_widget(registrationForm.agreeTerms, {
+                attr: {
+                    class: 'block w-full rounded-md bg-white  text-base text-gray-900  placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm'
+                }
+            }) }}
+            {{ form_errors(registrationForm.agreeTerms) }}
+        </div>
+        {{ form_row(registrationForm.email, { label: 'Adresse email' }) }}
+        {{ form_row(registrationForm.username, { label: 'Pseudo' }) }}
+        {{ form_row(registrationForm.firstName, { label: 'Prénom' }) }}
+        {{ form_row(registrationForm.lastName, { label: 'Nom' }) }}
+        {{ form_row(registrationForm.mobile, { label: 'Téléphone' }) }}
+        {{ form_row(registrationForm.plainPassword, { label: 'Mot de passe' }) }}
+        {{ form_row(registrationForm.site, { label: 'Site' }) }}
+        <div class="max-w-sm mx-auto mt-6">
+            {{ form_label(registrationForm.photo, 'Photo de profil', {
+                label_attr: {
+                    class: 'text-slate-900 text-sm font-medium mb-2 block'
+                }
+            }) }}
+            {{ form_widget(registrationForm.photo, {
+                attr: {
+                    class: 'w-full text-slate-600 font-medium text-sm border border-slate-200 rounded-md cursor-pointer
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
+                    file:cursor-pointer file:border-0 file:py-2 file:px-3 file:mr-4
+                    file:bg-gray-100 hover:file:bg-gray-200 file:text-slate-500'
+                }
+            }) }}
+            <p class="text-xs text-slate-500 mt-2">PNG, JPG, SVG, WEBP et GIF autorisés.</p>
+            {{ form_errors(registrationForm.photo) }}
+        </div>
+        {{ form_errors(registrationForm) }}
+
+        <div>
+            <button
+                type="submit"
+                class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500"
+            >
+                Créer mon compte
+            </button>
+        </div>
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}

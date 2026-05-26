@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 min-h-screen content-start">
+        {% for user in users %}
+
+            <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+
+                {# Avatar #}
+                <div class="flex flex-col items-center text-center">
+                    {% if user.photo %}
+                        <img class="w-24 h-24 rounded-full object-cover"
+                             src="{{ asset('assets/img/profil/' ~ user.photo) }}"
+                             alt="Photo de profil">
+                    {% else %}
+                        <span class="text-gray-500">Pas de photo</span>
+                    {% endif %}
+
+                    <h1 class="mt-2 text-lg font-bold text-gray-900">
+                        {{ user.firstName }} {{ user.lastName }}
+                    </h1>
+                    <p class="text-gray-500 text-sm">
+                        @{{ user.username }}
+                    </p>
+                </div>
+
+                {# Infos #}
+                <div class="mt-4 space-y-3 text-center">
+                    <div>
+                        <p class="text-xs font-medium text-gray-500">Email</p>
+                        <p class="text-gray-900 text-sm break-all">{{ user.email }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500">Site</p>
+                        <p class="text-gray-900 text-sm">{{ user.site.name }}</p>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+{% endblock %}

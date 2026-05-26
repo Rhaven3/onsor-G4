@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+{% endblock %}
+
+{% block body %}
+    {% embed 'views/form-template.html.twig' with {form : form} %}
+        {% block form_title %}Create a Trip{% endblock %}
+        {% block button_label %}Create{% endblock %}
+    {% endembed %}
+
+{#    Affichage carte Leaflet #}
+    <div id="map" class="mt-10 sm:mx-auto h-[500px] w-[500px]"></div>
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    {% endblock %}
+
+    {% block javascripts %}
+
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+
+    {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
+    {% if frankenphpHotReload %}
+        <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
+        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
+        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
+    {% endif %}
+
+</head>
+
+<!-- Utilisation de flex-col et min-h-screen pour un footer qui reste TOUJOURS en bas sans casser le contenu -->
+<body class="flex flex-col min-h-screen bg-slate-100 text-gray-800 antialiased">
+
+<header class="bg-gray-900 text-white shadow-md">
+    <!-- Zone Titre / Logo -->
+    <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 text-center sm:text-left">
+        <a href="{{ path('app_home') }}" class="inline-block hover:opacity-90 transition">
+            <h1 class="font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-blue-400">Onsor</h1>
+        </a>
+        <p class="mt-1 text-sm sm:text-base text-gray-400 italic">Le site d'organisation des sorties de l'ENI</p>
+    </div>
+
+    <!-- Barre de Navigation -->
+    <nav class="border-t border-b border-gray-800 bg-gray-950">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <!-- Sur mobile : empilé verticalement / Sur PC : aligné horizontalement -->
+            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center">
+
+                <!-- Liens de gauche (Navigation principale) -->
+                <ul class="flex flex-wrap items-stretch border-b border-gray-800 sm:border-b-0">
+                    <li class="flex">
+                        <a href="{{ path('app_home') }}" class="px-4 py-3 sm:py-4 text-sm font-medium text-gray-200 hover:bg-gray-800 hover:text-white transition flex items-center">Accueil</a>
+                    </li>
+                    <li class="flex">
+                        <a href="{{ path('trip_list') }}" class="px-4 py-3 sm:py-4 text-sm font-medium text-gray-200 hover:bg-gray-800 hover:text-white transition flex items-center">Sorties</a>
+                    </li>
+                </ul>
+
+                <!-- Liens de droite (Compte utilisateur) -->
+                <ul class="flex items-stretch bg-gray-900/40 sm:bg-transparent">
+                    {% if app.user %}
+                        <li class="flex flex-1 sm:flex-initial">
+                            <span class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-gray-300 transition flex items-center justify-center">Bonjour {{ app.user.firstName }}</span>
+                        </li>
+                        <li class="flex flex-1 sm:flex-initial border-l border-gray-800">
+                            <a href="{{ path('app_user_show_id', {id : app.user.id}) }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition flex items-center justify-center">Profil</a>
+                        </li>
+                        <li class="flex flex-1 sm:flex-initial border-l border-gray-800">
+                            <a href="{{ path('app_logout') }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-red-400 hover:bg-red-950/30 hover:text-red-300 transition flex items-center justify-center">Déconnexion</a>
+                        </li>
+                    {% else %}
+                        <li class="flex flex-1 sm:flex-initial">
+                            <a href="{{ path('app_login') }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-blue-400 hover:bg-gray-800 hover:text-blue-300 transition flex items-center justify-center">Connexion</a>
+                        </li>
+                        <li class="flex flex-1 sm:flex-initial border-l border-gray-800">
+                            <a href="{{ path('app_register') }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition flex items-center justify-center">Inscription</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Conteneur principal flexible -->
+<main class="flex-grow">
+    <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        {% block body %}{% endblock %}
+    </div>
+</main>
+
+<!-- Footer calé tout en bas -->
+<footer class="bg-gray-950 text-gray-400 text-xs sm:text-sm py-6 border-t border-gray-900 text-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        &copy; {{ "now" | date("Y") }} Les abrutis du Groupe 4 - ENI École Informatique. Tous droits réservés.
+    </div>
+</footer>
+
+</body>
+</html>
