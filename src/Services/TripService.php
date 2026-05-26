@@ -44,24 +44,44 @@ class TripService
         if (!$trip) {
             throw new Exception('Trip not found');
         }
-
-        $trip->setState(StateEnum::CANCELLED);
-        $this->entityManager->persist($trip);
-        $this->entityManager->flush();
+        if ($trip->getState() === StateEnum::CREATED or  $trip->getState() == null) {
+            $trip->setState(StateEnum::CANCELLED);
+            $this->entityManager->persist($trip);
+            $this->entityManager->flush();
+        }
     }
 
-    public function archive(TripRepository $tripRepository, EntityManagerInterface $entityManager
-        , int $id): void
+    public function archive(int $id): void
     {
-        $trip = $tripRepository->find($id);
+        $trip = $this->tripRepository->find($id);
 
         if (!$trip) {
             throw new Exception('Trip not found');
         }
-        $trip->setState(StateEnum::ARCHIVED);
-        $entityManager->persist($trip);
-        $entityManager->flush();
+        if ($trip->getState() !== StateEnum::ARCHIVED or  $trip->getState() == null) {
+            $trip->setState(StateEnum::ARCHIVED);
+            $this->entityManager->persist($trip);
+            $this->entityManager->flush();
+        }
+
     }
+
+    public function publish(int $id): void
+    {
+        $trip = $this->tripRepository->find($id);
+
+        if (!$trip) {
+            throw new Exception('Trip not found');
+        }
+        if ( StateEnum::CREATED ) {
+            $trip->setState(null);
+            $this->entityManager->persist($trip);
+            $this->entityManager->flush();
+        }
+
+    }
+
+
 
     public function findByFilter(array $filters = [] , ?int $id = null): array
     {

@@ -105,11 +105,22 @@ final class TripController extends AbstractController
         return $this->redirectToRoute('trip_detail', ['id' => $id]);
     }
 
+    #[Route('/{id}/pucblish', name: 'publish')]
+    public function publish(int $id): Response
+    {
+        $trip = $this->tripService->find($id);
+        if ($this->getUser() == $trip->getOrganisator()) {
+            $this->tripService->publish($id);
+        }
+        return $this->redirectToRoute('trip_detail', ['id' => $id]);
+    }
+
+
     #[IsGranted("ROLE_ADMIN")]
     #[Route('/{id}/archive', name: 'archive')]
     public function archive(int $id): Response
     {
-        $this->tripService->cancel($id);
+        $this->tripService->archive($id);
         return $this->redirectToRoute('trip_list');
     }
 }
