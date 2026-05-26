@@ -201,7 +201,7 @@ class Trip
         return $this->state;
     }
 
-    public function setState(StateEnum $state): static
+    public function setState(?StateEnum $state): static
     {
         $this->state = $state;
 
