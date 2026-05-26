@@ -6,10 +6,12 @@ use App\Entity\Address;
 use App\Entity\Site;
 use App\Entity\Trip;
 use App\Entity\User;
+use App\Enum\StateEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use SebastianBergmann\GitState\State;
 
 class TripFixture extends Fixture implements OrderedFixtureInterface
 {
@@ -46,7 +48,8 @@ class TripFixture extends Fixture implements OrderedFixtureInterface
             ->setOrganisator($user)
             ->setMaxRegistration(10)
             ->setAddress($address)
-            ->setSite($manager->getRepository(Site::class)->findOneBy(['name' => 'eni']));
+            ->setSite($manager->getRepository(Site::class)->findOneBy(['name' => 'eni']))
+            ->setState($faker->randomElement([StateEnum::CREATED, StateEnum::ARCHIVED, StateEnum::CANCELLED, null]));
 
             $manager->persist($trip);
         }

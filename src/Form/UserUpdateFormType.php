@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
 
 class UserUpdateFormType extends AbstractType
@@ -31,9 +32,15 @@ class UserUpdateFormType extends AbstractType
             ])
             ->add('photo', FileType::class, [
                 'label' => 'Photo de profil',
-                'mapped' => false,
                 'required' => false,
-                'attr' => ['accept' => 'image/*'],
+                'mapped' => false, // Important si tu gères l'upload manuellement dans le contrôleur
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, WebP, GIF).',
+                    ]),
+                ],
             ])
             ->add('currentPassword', PasswordType::class, [
                 'mapped' => false,

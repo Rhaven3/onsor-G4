@@ -152,7 +152,7 @@ class TripRepository extends ServiceEntityRepository
             ->createQueryBuilder('t')
             ->where('t.startDate >= :now')
             ->setParameter('now', new \DateTime('now'))
-            ->andWhere('t.state != :state')
+            ->andWhere('t.state = :state')
             ->setParameter('state', StateEnum::CREATED)
             ->addOrderBy('t.startDate', 'DESC')
             ->setMaxResults($nbTrips);

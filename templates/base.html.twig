@@ -67,6 +67,8 @@
                         <li class="flex flex-1 sm:flex-initial">
                             <a href="{{ path('app_login') }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-blue-400 hover:bg-gray-800 hover:text-blue-300 transition flex items-center justify-center">Connexion</a>
                         </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
                         <li class="flex flex-1 sm:flex-initial border-l border-gray-800">
                             <a href="{{ path('app_register') }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition flex items-center justify-center">Inscription</a>
                         </li>
