@@ -20,7 +20,6 @@ final class UserController extends AbstractController
     #[Route('/user/{id}', name: 'app_user_show_id')]
     public function show(int $id, UserRepository $userRepository, UserService $userService): Response
     {
-
         $user = $userService->getUser($id, $userRepository);
 
         if (!$user) {
@@ -32,11 +31,9 @@ final class UserController extends AbstractController
         ]);
     }
 
-
     #[Route('/user', name: 'app_user_show')]
     public function showAll(UserRepository $userRepository, UserService $userService): Response
     {
-
         $users = $userService->getUserAll($userRepository);
 
         if (!$users) {
@@ -56,12 +53,17 @@ final class UserController extends AbstractController
         Request $request,
         UserService $userService,
         UserPasswordHasherInterface $passwordHasher
-    ): Response
+    ): Response {
+        // Récupère l'utilisateur connecté
+        $currentUser = $this->getUser();
 
-    {
+        // Vérifie que l'ID dans l'URL correspond à l'utilisateur connecté
+        if ($currentUser->getId() !== $id) {
+            throw $this->createAccessDeniedException('Vous ne pouvez modifier que votre propre profil.');
+        }
 
+        // Récupère l'utilisateur à modifier (pour être sûr qu'il existe)
         $user = $userService->getUser($id, $userRepository);
-
         if (!$user) {
             throw $this->createNotFoundException("It's embarrassing, but your friend doesn't exist.");
         }
@@ -70,13 +72,11 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             // Gestion du mot de passe
             $currentPassword = $form->get('currentPassword')->getData();
             $newPassword = $form->get('newPassword')->getData();
 
             if ($currentPassword && $newPassword) {
-                // Vérifier que le mot de passe actuel est correct
                 if (!$passwordHasher->isPasswordValid($user, $currentPassword)) {
                     $this->addFlash('error', 'Le mot de passe actuel est incorrect.');
                     return $this->render('user/update.html.twig', [
@@ -84,14 +84,37 @@ final class UserController extends AbstractController
                         'user' => $user,
                     ]);
                 }
-                // Hasher et sauvegarder le nouveau mot de passe
                 $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
             }
 
+            // Gestion de la photo de profil
             $photo = $form->get('photo')->getData();
-
             if ($photo) {
-                // Supprimer l'ancienne photo si elle existe
+                // Liste des extensions et types MIME autorisés
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+                // Vérification de l'extension
+                $fileExtension = strtolower($photo->getClientOriginalExtension());
+                if (!in_array($fileExtension, $allowedExtensions, true)) {
+                    $this->addFlash('error', 'Seules les images JPG, PNG, WebP et GIF sont autorisées.');
+                    return $this->render('user/update.html.twig', [
+                        'registrationForm' => $form->createView(),
+                        'user' => $user,
+                    ]);
+                }
+
+                // Vérification du type MIME
+                $fileMimeType = $photo->getClientMimeType();
+                if (!in_array($fileMimeType, $allowedMimeTypes, true)) {
+                    $this->addFlash('error', 'Le type de fichier n\'est pas une image valide.');
+                    return $this->render('user/update.html.twig', [
+                        'registrationForm' => $form->createView(),
+                        'user' => $user,
+                    ]);
+                }
+
+                // Si tout est OK, on supprime l'ancienne photo si elle existe
                 if ($user->getPhoto()) {
                     $oldFile = $this->getParameter('photos_directory') . '/' . $user->getPhoto();
                     if (file_exists($oldFile)) {
@@ -99,7 +122,8 @@ final class UserController extends AbstractController
                     }
                 }
 
-                $newFilename = uniqid() . '.' . $photo->guessExtension();
+                // Génération d'un nom de fichier unique
+                $newFilename = uniqid() . '.' . $fileExtension;
                 $photo->move($this->getParameter('photos_directory'), $newFilename);
                 $user->setPhoto($newFilename);
             }
@@ -117,28 +141,28 @@ final class UserController extends AbstractController
     }
 
     #[Route('/user/tripRegister/{id}', name: 'trip_register')]
-    public function registerTrip(UserService $userService,int $id): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function registerTrip(UserService $userService, int $id): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        $userService->registration($id,$this->getUser());
-        return $this->redirectToRoute('trip_detail',['id'=>$id]);
+        $userService->registration($id, $this->getUser());
+        return $this->redirectToRoute('trip_detail', ['id' => $id]);
     }
 
     #[Route('/user/tripWithdraw/{id}', name: 'trip_withdraw')]
-    public function withdrawTrip(UserService $userService,int $id,TripService $tripService,Request $request): ?Response
+    public function withdrawTrip(UserService $userService, int $id, TripService $tripService, Request $request): ?Response
     {
-        $userService->withdraw($id,$this->getUser());
+        $userService->withdraw($id, $this->getUser());
         $trips = $tripService->findByFilter();
         $filterForm = $this->createForm(FilterTripType::class);
         $filterForm->handleRequest($request);
 
-//        return $this->redirectToRoute('trip_detail',['id'=>$id]);
         return $this->render('trip/list.html.twig', [
             'trips' => $trips,
             'filterForm' => $filterForm->createView(),
         ]);
     }
+
     #[Route('/user/tripWithdrawDetail/{id}', name: 'trip_withdrawDetail')]
-    public function withdrawTripDetail(UserService $userService,int $id,TripService $tripService,Request $request): ?Response
+    public function withdrawTripDetail(UserService $userService, int $id, TripService $tripService, Request $request): ?Response
     {
         $userService->withdraw($id, $this->getUser());
         $trips = $tripService->findByFilter();
@@ -147,6 +171,4 @@ final class UserController extends AbstractController
 
         return $this->redirectToRoute('trip_detail', ['id' => $id]);
     }
-
-
 }

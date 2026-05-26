@@ -34,6 +34,18 @@ class UserUpdateFormType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'attr' => ['accept' => 'image/*'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                            'image/gif',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, WebP, GIF).',
+                    ])
+                ],
             ])
             ->add('currentPassword', PasswordType::class, [
                 'mapped' => false,
