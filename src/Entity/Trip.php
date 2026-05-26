@@ -138,6 +138,10 @@ class Trip
     {
         return $this->organisator;
     }
+    public  function  getUser(): ?User
+    {
+        return $this->organisator;
+    }
 
     public function setOrganisator(?User $organisator): static
     {

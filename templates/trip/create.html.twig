@@ -15,11 +15,16 @@
         {% block form_title %}{% endblock %}
         {% block button_submit_label %}Create{% endblock %}
         {% block button2 %}
-            <button name="published" value="true" class="bg-green-500 hover:bg-green-700 flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow">Publier</button>
+            {% if not published %}
+                <button name="published" value="true"
+                        class="bg-green-500 hover:bg-green-700 flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow">
+                    Publier
+                </button>
+            {% endif %}
         {% endblock %}
     {% endembed %}
 
-{#    Affichage carte Leaflet #}
+    {#    Affichage carte Leaflet #}
     <div id="map" class="mt-10 sm:mx-auto h-[500px] w-[500px]"></div>
 
 {% endblock %}
