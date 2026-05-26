@@ -11,6 +11,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use SebastianBergmann\GitState\State;
 
 class TripFixture extends Fixture implements OrderedFixtureInterface
 {
@@ -48,7 +49,7 @@ class TripFixture extends Fixture implements OrderedFixtureInterface
             ->setMaxRegistration(10)
             ->setAddress($address)
             ->setSite($manager->getRepository(Site::class)->findOneBy(['name' => 'eni']))
-            ->setState(StateEnum::CREATED);
+            ->setState($faker->randomElement([StateEnum::CREATED, StateEnum::ARCHIVED, StateEnum::CANCELLED, null]));
 
             $manager->persist($trip);
         }
