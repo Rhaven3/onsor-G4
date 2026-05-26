@@ -3,10 +3,11 @@
 {% block title %}Onsor - Accueil{% endblock %}
 
 {% block body %}
-    <h1 class="text-[2.5rem] mb-8">Bienvenue sur Onsor</h1>
+    <h1 class="text-[2.5rem] mb-4">Bienvenue sur Onsor</h1>
 
-    <p class="mb-15">Le site qui vous fait prendre l'air !</p>
+    <p class="mb-4">Le site qui vous fait prendre l'air !</p>
 
+    <h2 class="mb-4">Les prochaines sorties :</h2>
     <div class="lg:flex lg:flex-row">
         {% for trip in trips %}
             <div
@@ -19,6 +20,8 @@
                         <div class="text-gray-900 italic text-sm mb-2">{{ trip.startDate | date("d/m/Y") }}</div>
                         <p class="text-gray-700 text-base">{{ trip.description }}</p>
                     </div>
+                </a>
+                <a href="{{ path('app_user_show_id', {"id" : trip.organisator.id}) }}">
                     <div class="flex items-center">
                         <img class="w-10 h-10 rounded-full mr-4"
                             {% if trip.getOrganisator.getPhoto is not null %}
