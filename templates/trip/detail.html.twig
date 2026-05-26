@@ -16,7 +16,7 @@
 
             <div class="md:ml-auto flex gap-2">
                 {% if app.user and (trip.limitRegistrationDate > date('now')) %}
-                    {% if is_granted("ROLE_ADMIN") and trip.state.value != 'Archivée' %}
+                    {% if is_granted("ROLE_ADMIN") and ( trip.state?.value != 'Archivée' or trip.state is null) %}
                         <a href="{{ path('trip_archive', {'id': trip.id}) }}"
                            class="inline-block bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-2.5 rounded-lg transition duration-200 shadow-sm">
                             Archivée
