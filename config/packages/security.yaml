@@ -16,6 +16,11 @@ security:
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
         main:
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 semaine en secondes
+                path: /
+                always_remember_me: true # Optionnel : coche toujours "Se souvenir de moi"
             lazy: true
             provider: app_user_provider
 
