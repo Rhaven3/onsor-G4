@@ -149,6 +149,8 @@ class TripRepository extends ServiceEntityRepository
     function findNNextTrip(int $nbTrips) {
         $qb = $this
             ->createQueryBuilder('t')
+            ->join('t.organisator', 'o')
+            ->addSelect('o')
             ->where('t.startDate >= :now')
             ->setParameter('now', new \DateTime('now'))
             ->andWhere('t.state = :state')
