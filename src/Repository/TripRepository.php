@@ -74,6 +74,23 @@ class TripRepository extends ServiceEntityRepository
     }
 
 
+    public function findAllTripCreated(int $id)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb
+            ->join('t.site', 's')
+            ->addSelect('s')
+            ->setParameter('id', $id)
+            ->leftJoin('t.organisator', 'o')
+            ->addSelect('o')
+            ->where("o.id = :id")
+            ->andWhere("t.state = 'Créée'");
+
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
+
 
     public function findTripsWithFilters(array $filters = [], $id = null): array
     {

@@ -35,6 +35,9 @@ class TripService
         $this->entityManager->flush();
     }
 
+    public function findAllCreated(int $id){
+        return $this->tripRepository->findAllTripCreated($id);
+    }
 
 
     public function cancel(int $id): void

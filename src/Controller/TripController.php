@@ -47,6 +47,19 @@ final class TripController extends AbstractController
         ]);
     }
 
+    #[Route('/listCreated', name: 'listCreated')]
+    public function listCreated(Request $request): Response
+    {
+        $trips = $this->tripService->findAllCreated($this->getUser()->getId());
+        $filterForm = $this->createForm(FilterTripType::class);
+        $filterForm->handleRequest($request);
+
+
+        return $this->render('trip/list.html.twig', [
+            'trips' => $trips,
+            'filterForm' => $filterForm,
+        ]);
+    }
     #[Route('/create', name: 'create', methods: ['POST', 'GET'])]
     public function create(Request $request): Response
     {
@@ -123,4 +136,6 @@ final class TripController extends AbstractController
         $this->tripService->archive($id);
         return $this->redirectToRoute('trip_list');
     }
+
+
 }
