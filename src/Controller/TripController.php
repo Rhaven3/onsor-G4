@@ -18,10 +18,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class TripController extends AbstractController
 {
     public function __construct(
-        private TripService $tripService,
+        private TripService            $tripService,
         private EntityManagerInterface $entityManager,
     )
-    {}
+    {
+    }
 
     #[Route('', name: 'list')]
     public function list(Request $request): Response
@@ -32,12 +33,12 @@ final class TripController extends AbstractController
 
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
             $data = $filterForm->getData();
-            if ($this->getUser()){
+            if ($this->getUser()) {
                 $id = $this->getUser()->getId();
-            }else{
+            } else {
                 $id = null;
             }
-            $trips = $this->tripService->findByFilter($data,$id);
+            $trips = $this->tripService->findByFilter($data, $id);
         }
 
         return $this->render('trip/list.html.twig', [
@@ -45,6 +46,7 @@ final class TripController extends AbstractController
             'filterForm' => $filterForm->createView(),
         ]);
     }
+
     #[Route('/create', name: 'create', methods: ['POST', 'GET'])]
     public function create(Request $request): Response
     {
@@ -97,19 +99,17 @@ final class TripController extends AbstractController
     public function cancel(int $id): Response
     {
         $trip = $this->tripService->find($id);
-        if ($this->getUser() == $trip->getOrganisator() || $this->getUser()->getRoles()){
+        if ($this->getUser() == $trip->getOrganisator() || $this->getUser()->getRoles()) {
             $this->tripService->cancel($id);
         }
-
         return $this->redirectToRoute('trip_detail', ['id' => $id]);
     }
 
     #[IsGranted("ROLE_ADMIN")]
     #[Route('/{id}/archive', name: 'archive')]
-    public function archive(): Response
+    public function archive(int $id): Response
     {
-        return $this->render('trip/list.html.twig', [
-            'controller_name' => 'TripController',
-        ]);
+        $this->tripService->cancel($id);
+        return $this->redirectToRoute('trip_list');
     }
 }

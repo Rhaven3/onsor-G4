@@ -82,9 +82,10 @@ class TripRepository extends ServiceEntityRepository
 
         $qb->Join('t.organisator', 'o')
             ->addSelect('o')
-            ->andWhere('t.state != :state OR t.state IS NULL')
+            ->andWhere('(t.state != :state and t.state != :s2) OR t.state IS NULL')
             ->andWhere('t.endDate > :archiveDate')
             ->setParameter('state', (string) StateEnum::ARCHIVED->value)
+            ->setParameter('s2', (string) StateEnum::CREATED->value)
             ->setParameter('archiveDate', $dateArchive);
 
         if (!empty($filters['name'])) {
