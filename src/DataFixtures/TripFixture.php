@@ -27,7 +27,7 @@ class TripFixture extends Fixture implements OrderedFixtureInterface
         ->setCity($faker->city())
         ->setPostcode($faker->postcode())
         ->setLatitude($faker->latitude())
-            ->setState(StateEnum::CREATED)
+            ->setState(StateEnum::CREATED->value)
         ->setLongitude($faker->longitude());
 
         $manager->persist($address);
