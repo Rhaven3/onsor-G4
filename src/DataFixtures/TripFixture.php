@@ -27,7 +27,6 @@ class TripFixture extends Fixture implements OrderedFixtureInterface
         ->setCity($faker->city())
         ->setPostcode($faker->postcode())
         ->setLatitude($faker->latitude())
-            ->setState(StateEnum::CREATED->value)
         ->setLongitude($faker->longitude());
 
         $manager->persist($address);
@@ -48,7 +47,8 @@ class TripFixture extends Fixture implements OrderedFixtureInterface
             ->setOrganisator($user)
             ->setMaxRegistration(10)
             ->setAddress($address)
-            ->setSite($manager->getRepository(Site::class)->findOneBy(['name' => 'eni']));
+            ->setSite($manager->getRepository(Site::class)->findOneBy(['name' => 'eni']))
+            ->setState(StateEnum::CREATED);
 
             $manager->persist($trip);
         }
