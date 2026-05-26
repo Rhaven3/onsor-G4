@@ -113,20 +113,20 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                        {%- set badgeClass = 'bg-blue-50 text-blue-700 border-blue-200' -%}
+                                        {%- set badgeClass = 'bg-green-50 text-green-700' -%}
                                         {%- set statusLabel = 'Ouverte' -%}
 
                                         {% if trip.state %}
-                                            {% set badgeClass = 'bg-yellow-50 text-yellow-700 border-yellow-200' %}
+                                            {% set badgeClass = 'bg-red-50 text-red-700' %}
                                             {% set statusLabel = trip.state.value %}
                                         {% elseif trip.participants|length == trip.maxRegistration %}
-                                            {% set badgeClass = 'bg-orange-50 text-orange-700 border-orange-200' %}
+                                            {% set badgeClass = 'bg-orange-50 text-orange-700' %}
                                             {% set statusLabel = 'Clôturé' %}
                                         {% elseif trip.endDate < date('now') %}
-                                            {% set badgeClass = 'bg-gray-100 text-gray-600 border-gray-300' %}
+                                            {% set badgeClass = 'bg-gray-100 text-gray-600' %}
                                             {% set statusLabel = 'Passée' %}
                                         {% elseif (trip.endDate > date('now')) and (trip.startDate < date('now')) %}
-                                            {% set badgeClass = 'bg-green-50 text-green-700 border-green-200' %}
+                                            {% set badgeClass = 'bg-yellow-50 text-yellow-700' %}
                                             {% set statusLabel = 'En cours' %}
                                         {% endif %}
 
@@ -188,8 +188,8 @@
                                 {% if trip.state %}{% set badge, lbl = 'bg-yellow-50 text-yellow-700 border-yellow-200', trip.state.value %}
                                 {% elseif trip.participants|length == trip.maxRegistration %}{% set badge, lbl = 'bg-orange-50 text-orange-700 border-orange-200', 'Clôturé' %}
                                 {% elseif trip.endDate < date('now') %}{% set badge, lbl = 'bg-gray-100 text-gray-600 border-gray-300', 'Passée' %}
-                                {% elseif (trip.endDate > date('now')) and (trip.startDate < date('now')) %}{% set badge, lbl = 'bg-green-50 text-green-700 border-green-200', 'En cours' %}
-                                {% else %}{% set badge, lbl = 'bg-blue-50 text-blue-700 border-blue-200', 'Ouverte' %}{% endif %}
+                                {% elseif (trip.endDate > date('now')) and (trip.startDate < date('now')) %}{% set badge, lbl = 'bg-yellow-50 text-yellow-700', 'En cours' %}
+                                {% else %}{% set badge, lbl = 'bg-green-50 text-blue-700 border-green-200', 'Ouverte' %}{% endif %}
                                 <span class="px-2 py-0.5 text-2xs font-semibold rounded-full border {{ badge }}">{{ lbl }}</span>
                             </div>
 
