@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Form\UserImportFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,4 +49,31 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    #[Route('/register/import', name: 'app_register_import')]
+    public function importUsersExcel(
+        Request $request,
+        UserImportService $userImportService
+    ): Response {
+        $form = $this->createForm(UserImportFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('excel_file')->getData();
+            $result = $userImportService->UserImportFormType($file);
+
+            if ($result['success']) {
+                $this->addFlash('success', sprintf('%d utilisateurs importés avec succès !', $result['count']));
+            } else {
+                $this->addFlash('error', $result['message']);
+            }
+
+            return $this->redirectToRoute('app_register_import');
+        }
+
+        return $this->render('registration/import.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 }
+
+
