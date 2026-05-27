@@ -113,6 +113,8 @@ final class TripController extends AbstractController
     {
         $trip = $this->tripService->findByIdJoin($id);
 
+        if(empty($trip)) throw $this->createNotFoundException('Sortie non trouvée');
+
         return $this->render('trip/detail.html.twig', [
             'trip' => $trip[0],
             'controller_name' => 'TripController',
