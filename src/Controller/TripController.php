@@ -18,32 +18,58 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/trip', name: 'trip_')]
 final class TripController extends AbstractController
 {
-    public function __construct(
-        private TripService            $tripService,
-        private EntityManagerInterface $entityManager,
-    )
+    public function __construct(private TripService $tripService, private EntityManagerInterface $entityManager,)
     {
     }
 
-    #[Route('', name: 'list')]
-    public function list(Request $request): Response
+    #[Route('/list/{page?1}', name: 'list', requirements: ['page' => '\d+'], methods: ['GET', 'POST'])]
+    public function list(Request $request, int $page): Response
     {
-        $trips = $this->tripService->findByFilter();
-        return $this->extracted($request, $trips);
+        return $this->extracted($request, $page, 'list');
     }
-
-    #[Route('/listCreated', name: 'listCreated')]
-    public function listCreated(Request $request): Response
+    #[Route('/listCreated/{page?1}', name: 'listCreated', requirements: ['page' => '\d+'], methods: ['GET', 'POST'])]
+    public function listCreated(Request $request, int $page): Response
     {
-
-        if ($this->getUser()) {
-            $trips = $this->tripService->findAllCreated($this->getUser()->getId());
-        }else{
+        if (!$this->getUser()) {
             return $this->redirectToRoute('trip_list');
         }
-
-        return $this->extracted($request, $trips);
+        return $this->extracted($request, $page, 'listCreated');
     }
+
+    private function extracted(Request $request, int $page, string $context): Response
+    {
+        $filterForm = $this->createForm(FilterTripType::class);
+        $filterForm->handleRequest($request);
+
+        $id = $this->getUser() ? $this->getUser()->getId() : null;
+        $filters = [];
+
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            $filters = $filterForm->getData();
+            if ($request->isMethod('POST')) {
+                $page = 1;
+            }
+        }
+
+        if ($context === 'listCreated') {
+            $trips = $this->tripService->findAllCreated($id, $page);
+        } else {
+            $trips = $this->tripService->findByFilter($filters, $id, $page);
+        }
+        $totalTrips = count($trips);
+
+        $maxPage =  ceil($totalTrips /15) ;
+
+        return $this->render('trip/list.html.twig', [
+            'trips'        => $trips,
+            'filterForm'   => $filterForm->createView(),
+            'currentPage'  => $page,
+            'currentRoute' => 'trip_' . $context,
+            'formAction'   => $this->generateUrl('trip_list', ['page' => 1]),
+            'maxPage'      => $maxPage,
+        ]);
+    }
+
     #[Route('/create', name: 'create', methods: ['POST', 'GET'])]
     #[Route('/{id}/update', name: 'update', requirements: ['id' => '\d+'])]
     #[IsGranted("ROLE_USER")]
@@ -137,33 +163,6 @@ final class TripController extends AbstractController
     {
         $this->tripService->archive($id);
         return $this->redirectToRoute('trip_list');
-    }
-
-    /**
-     * @param Request $request
-     * @param array $trips
-     * @return Response
-     */
-    public function extracted(Request $request, array $trips): Response
-    {
-        $filterForm = $this->createForm(FilterTripType::class);
-        $filterForm->handleRequest($request);
-
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $data = $filterForm->getData();
-            if ($this->getUser()) {
-                $id = $this->getUser()->getId();
-            } else {
-                $id = null;
-            }
-            $trips = $this->tripService->findByFilter($data, $id);
-        }
-
-
-        return $this->render('trip/list.html.twig', [
-            'trips' => $trips,
-            'filterForm' => $filterForm->createView(),
-        ]);
     }
 
 

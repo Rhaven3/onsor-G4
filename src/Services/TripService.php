@@ -6,6 +6,7 @@ use App\Entity\Trip;
 use App\Enum\StateEnum;
 use App\Repository\TripRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use function Webmozart\Assert\Tests\StaticAnalysis\throws;
@@ -35,8 +36,8 @@ class TripService
         $this->entityManager->flush();
     }
 
-    public function findAllCreated(int $id){
-        return $this->tripRepository->findAllTripCreated($id);
+    public function findAllCreated(int $id , int $page = 1): Paginator{
+        return $this->tripRepository->findAllTripCreated($id , $page);
     }
 
 
@@ -93,9 +94,9 @@ class TripService
 
 
 
-    public function findByFilter(array $filters = [] , ?int $id = null): array
+    public function findByFilter(array $filters = [] , ?int $id = null,$page = 1): Paginator
     {
-        return $this->tripRepository->findTripsWithFilters($filters,$id);
+        return $this->tripRepository->findTripsWithFilters($filters,$id,$page);
     }
 
     public function findByIdJoin($id): ?array

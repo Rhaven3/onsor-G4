@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Trip;
 use App\Enum\StateEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -73,8 +74,11 @@ class TripRepository extends ServiceEntityRepository
     }
 
 
-    public function findAllTripCreated(int $id)
+    public function findAllTripCreated(int $id , $page): Paginator
     {
+        $limit = 15;
+        $offset = ($page - 1) * $limit;
+
         $qb = $this->createQueryBuilder('t');
         $qb
             ->join('t.site', 's')
@@ -85,13 +89,22 @@ class TripRepository extends ServiceEntityRepository
             ->where("o.id = :id")
             ->andWhere("t.state = 'Créée'");
 
-        $query = $qb->getQuery();
-        return $query->getResult();
+//        $query = $qb->getQuery();
+//        return $query->getResult();
+
+        $qb->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return new Paginator($qb->getQuery());
     }
 
 
-    public function findTripsWithFilters(array $filters = [], $id = null): array
+    public function findTripsWithFilters(array $filters = [], $id = null,int $page): Paginator
     {
+
+        $limit = 15;
+        $offset = ($page - 1) * $limit;
+
         $dateArchive = new \DateTime('-30 days');
         $qb = $this->createQueryBuilder('t');
 
@@ -157,7 +170,11 @@ class TripRepository extends ServiceEntityRepository
 
         $qb->orderBy('t.endDate', 'DESC');
 
-        return $qb->getQuery()->getResult();
+//        return $qb->getQuery()->getResult();
+        $qb->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return new Paginator($qb->getQuery());
     }
 
     /**

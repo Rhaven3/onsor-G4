@@ -120,18 +120,14 @@ final class UserController extends AbstractController
         return $this->redirectToRoute('trip_detail', ['id' => $id]);
     }
 
-    #[Route('/user/tripWithdraw/{id}', name: 'trip_withdraw')]
-    public function withdrawTrip(UserService $userService, int $id, TripService $tripService, Request $request): ?Response
+    #[Route('/user/tripWithdraw/{id}', name: 'trip_withdraw', requirements: ['id' => '\d+'])]
+    public function withdrawTrip(UserService $userService, int $id): Response
     {
         $userService->withdraw($id, $this->getUser());
-        $trips = $tripService->findByFilter();
-        $filterForm = $this->createForm(FilterTripType::class);
-        $filterForm->handleRequest($request);
 
-        return $this->render('trip/list.html.twig', [
-            'trips' => $trips,
-            'filterForm' => $filterForm->createView(),
-        ]);
+        $this->addFlash('success', 'Vous vous êtes désisté de la sortie avec succès.');
+
+        return $this->redirectToRoute('trip_list', ['page' => 1]);
     }
 
     #[Route('/user/tripWithdrawDetail/{id}', name: 'trip_withdrawDetail')]
