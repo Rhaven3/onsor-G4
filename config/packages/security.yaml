@@ -23,6 +23,7 @@ security:
                 always_remember_me: true # Optionnel : coche toujours "Se souvenir de moi"
             lazy: true
             provider: app_user_provider
+            user_checker: App\Security\UserChecker
 
             form_login:
                 login_path: app_login
