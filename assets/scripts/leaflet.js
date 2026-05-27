@@ -14,12 +14,21 @@ var marker = L.marker();
 
 let latitudeInput = document.getElementById('trip_newAddress_latitude');
 let longitudeInput = document.getElementById('trip_newAddress_longitude');
+let addressSelected = document.getElementById('trip_address');
 
 // -- Événements --
 
 map.on('click', onMapClick);
 latitudeInput.addEventListener('blur', (event) => markerWithInput(latitudeInput.value, longitudeInput.value));
 longitudeInput.addEventListener('blur', (event) => markerWithInput(latitudeInput.value, longitudeInput.value));
+addressSelected.addEventListener('change', (event) => {
+    const option = addressSelected.options[addressSelected.selectedIndex];
+
+    const lat = option.dataset.lat;
+    const long = option.dataset.lng;
+
+    markerWithInput(lat, long);
+});
 
 // -- Fonctions --
 

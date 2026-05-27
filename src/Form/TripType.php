@@ -56,8 +56,14 @@ class TripType extends AbstractType
                 'label' => 'Adresse',
                 'class' => Address::class,
                 'choice_label' => 'name',
-                'placeholder' => 'Choisisssez une adresse',
+                'placeholder' => 'Choisissez une adresse',
                 'required' => false,
+                'choice_attr' => function ($address) {
+                    return [
+                        'data-lat' => $address->getLatitude(),
+                        'data-lng' => $address->getLongitude(),
+                    ];
+                }
             ])
             ->add('newAddress', AddressType::class, [
                 'mapped' => false,
@@ -68,8 +74,7 @@ class TripType extends AbstractType
                 'data' => true,
                 'mapped' => false,
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
