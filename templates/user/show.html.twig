@@ -53,6 +53,8 @@
                     <p class="text-gray-900">
                         {{ user.site.name }}
                     </p>
+
+                    {% if app.user == user %}
                     <div class="mt-8 flex justify-center">
                         <a href="{{ path('app_user_update', {id: user.id}) }}">
                             <button
@@ -63,6 +65,7 @@
                             </button>
                         </a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
