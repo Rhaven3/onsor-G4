@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+    <h1 class="text-red-200"><strong>Erreur 404</strong></h1>
+
+    <p>La ressource demandée n'a pas été trouvée.</p>
+    <p>Erreur : {{ exception.message }}</p>
+
+{% endblock %}
