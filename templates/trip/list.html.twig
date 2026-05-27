@@ -5,13 +5,18 @@
 {% block body %}
     <div class="min-h-screen bg-gray-50/50 py-8 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto space-y-8">
+            {% if app.user %}
+                <a href="{{ path('trip_create') }}"
+                   class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-lg transition duration-200 shadow-sm">
+                    Créer une sortie
+                </a>
+                <a href="{{ path('trip_listCreated') }}"
+                   class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-medium px-5 py-2.5 rounded-lg transition duration-200 shadow-sm">
+                    Afficher vos sortie(s) non publiée(s)
+                </a>
+            {% endif %}
 
-            <a href="{{ path('trip_create') }}"
-               class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-lg transition duration-200 shadow-sm">
-                Créer une sortie
-            </a>
-
-
+            {% if filterForm is defined %}
             <!-- Section Filtre -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-8 w-full">
                 {{ form_start(filterForm) }}
@@ -20,7 +25,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
                     </svg>
-                    Filtrer les sorties
+                    Filtrer les sorties publiées
                 </h2>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -77,10 +82,6 @@
 
                 <!-- Boutons -->
                 <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end">
-                    <a href="{{ path('trip_listCreated') }}"
-                       class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-semibold rounded-xl text-white bg-gray-600 hover:bg-gray-700 shadow-sm hover:shadow-md transition-all focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 cursor-pointer m-1">
-                        Afficher vos sortie(s) non publiée(s)
-                    </a>
                     <button type="submit"
                             class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow-md transition-all focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer">
                         Filtrer les résultats
@@ -88,6 +89,7 @@
                 </div>
                 {{ form_end(filterForm) }}
             </div>
+            {% endif %}
 
             <!-- Liste des Sorties -->
             <div class="space-y-4">

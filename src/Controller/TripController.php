@@ -29,37 +29,20 @@ final class TripController extends AbstractController
     public function list(Request $request): Response
     {
         $trips = $this->tripService->findByFilter();
-        $filterForm = $this->createForm(FilterTripType::class);
-        $filterForm->handleRequest($request);
-
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $data = $filterForm->getData();
-            if ($this->getUser()) {
-                $id = $this->getUser()->getId();
-            } else {
-                $id = null;
-            }
-            $trips = $this->tripService->findByFilter($data, $id);
-        }
-
-        return $this->render('trip/list.html.twig', [
-            'trips' => $trips,
-            'filterForm' => $filterForm->createView(),
-        ]);
+        return $this->extracted($request, $trips);
     }
 
     #[Route('/listCreated', name: 'listCreated')]
     public function listCreated(Request $request): Response
     {
-        $trips = $this->tripService->findAllCreated($this->getUser()->getId());
-        $filterForm = $this->createForm(FilterTripType::class);
-        $filterForm->handleRequest($request);
 
+        if ($this->getUser()) {
+            $trips = $this->tripService->findAllCreated($this->getUser()->getId());
+        }else{
+            return $this->redirectToRoute('trip_list');
+        }
 
-        return $this->render('trip/list.html.twig', [
-            'trips' => $trips,
-            'filterForm' => $filterForm,
-        ]);
+        return $this->extracted($request, $trips);
     }
     #[Route('/create', name: 'create', methods: ['POST', 'GET'])]
     #[Route('/{id}/update', name: 'update', requirements: ['id' => '\d+'])]
@@ -148,6 +131,33 @@ final class TripController extends AbstractController
     {
         $this->tripService->archive($id);
         return $this->redirectToRoute('trip_list');
+    }
+
+    /**
+     * @param Request $request
+     * @param array $trips
+     * @return Response
+     */
+    public function extracted(Request $request, array $trips): Response
+    {
+        $filterForm = $this->createForm(FilterTripType::class);
+        $filterForm->handleRequest($request);
+
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            $data = $filterForm->getData();
+            if ($this->getUser()) {
+                $id = $this->getUser()->getId();
+            } else {
+                $id = null;
+            }
+            $trips = $this->tripService->findByFilter($data, $id);
+        }
+
+
+        return $this->render('trip/list.html.twig', [
+            'trips' => $trips,
+            'filterForm' => $filterForm->createView(),
+        ]);
     }
 
 
