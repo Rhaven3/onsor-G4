@@ -7,7 +7,7 @@
         <div class="max-w-7xl mx-auto space-y-8">
             {% if app.user %}
                 <a href="{{ path('trip_create') }}"
-                   class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-lg transition duration-200 shadow-sm">
+                   class=" bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-lg transition duration-200 shadow-sm hidden md:inline-block">
                     Créer une sortie
                 </a>
                 <a href="{{ path('trip_listCreated') }}"
@@ -241,11 +241,17 @@
                                         Par {{ trip.organisator.firstName }} {{ trip.organisator.lastName }}</p>
                                 </div>
                                 {# Utilisation des mêmes variables d'états que le tableau desktop #}
+                                {% set badge, lbl = 'bg-green-50 text-green-700', 'Ouverte' %}
                                 {% if trip.state %}{% set badge, lbl = 'bg-red-50 text-red-700', trip.state.value %}
+                                    {% if trip.state.value == 'Créée' %}{% set badge, lbl = 'bg-blue-50 text-blue-700', 'Créée' %}
+                                    {% endif %}
                                 {% elseif trip.participants|length == trip.maxRegistration %}{% set badge, lbl = 'bg-orange-50 text-orange-700 border-orange-200', 'Clôturé' %}
                                 {% elseif trip.endDate < date('now') %}{% set badge, lbl = 'bg-gray-100 text-gray-600 border-gray-300', 'Passée' %}
                                 {% elseif (trip.endDate > date('now')) and (trip.startDate < date('now')) %}{% set badge, lbl = 'bg-yellow-50 text-yellow-700', 'En cours' %}
-                                {% else %}{% set badge, lbl = 'bg-green-50 text-green-700 border-green-200', 'Ouverte' %}{% endif %}
+                                {% endif %}
+
+
+
                                 <span
                                     class="px-2 py-0.5 text-2xs font-semibold rounded-full border {{ badge }}">{{ lbl }}</span>
                             </div>
@@ -258,7 +264,7 @@
                                 <div><span class="text-gray-400">Places :</span> {{ trip.participants|length }}
                                     /{{ trip.maxRegistration }}</div>
                                 <div><span
-                                        class="text-gray-400">Inscrit ? :</span> {% if app.user and app.user in trip.participants %}
+                                        class="text-gray-400">Inscrit :</span> {% if app.user and app.user in trip.participants %}
                                         <span class="text-green-600 font-semibold">Oui</span>{% else %}Non{% endif %}
                                 </div>
                             </div>
