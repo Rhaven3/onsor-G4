@@ -20,11 +20,6 @@ final class UserController extends AbstractController
     #[Route('/user/{id}', name: 'app_user_show_id')]
     public function show(int $id, UserRepository $userRepository, UserService $userService): Response
     {
-        // Vérifie que l'utilisateur connecté est bien celui dont l'ID est dans l'URL
-        $currentUser = $this->getUser();
-        if ($currentUser->getId() !== $id) {
-            throw $this->createAccessDeniedException('Vous ne pouvez accéder qu’à votre propre profil.');
-        }
 
         $user = $userService->getUser($id, $userRepository);
 
