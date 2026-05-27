@@ -113,9 +113,7 @@ final class TripController extends AbstractController
 
         $trip = $this->tripService->find($id);
         if ($this->getUser() == $trip->getOrganisator() || $this->getUser()->getRoles()) {
-            if ($valeurSaisie ) {
-                $this->tripService->cancel($id);
-            }
+                $this->tripService->cancel($id,$valeurSaisie);
         }
         return $this->redirectToRoute('trip_detail', ['id' => $id]);
 

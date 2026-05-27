@@ -40,7 +40,7 @@ class TripService
     }
 
 
-    public function cancel(int $id): void
+    public function cancel(int $id,$comment = null): void
     {
         $trip = $this->tripRepository->find($id);
 
@@ -49,6 +49,7 @@ class TripService
         }
         if ($trip->getState() === StateEnum::CREATED or  $trip->getState() == null) {
             $trip->setState(StateEnum::CANCELLED);
+            $trip->setCancelComment($comment);
             $this->entityManager->persist($trip);
             $this->entityManager->flush();
         }
