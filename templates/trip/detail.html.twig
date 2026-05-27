@@ -59,6 +59,13 @@
                                class="inline-block bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-2.5 rounded-lg transition duration-200 shadow-sm">
                                 Annuler
                             </a>
+                            <button
+                                data-controller="popup"
+                                data-popup-url-value="{{ path('trip_cancel', {'id': trip.id}) }}"
+                                data-action="click->popup#open"
+                                class="btn btn-primary">
+                                Modifier mon statut
+                            </button>
                         {% endif %}
                         {% if trip.organisator == app.user %}
                             <a href="{{ path('trip_update', {'id': trip.id}) }}"

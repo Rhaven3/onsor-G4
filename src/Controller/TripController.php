@@ -106,13 +106,19 @@ final class TripController extends AbstractController
 
     #[Route('/{id}/cancel', name: 'cancel')]
     #[IsGranted("ROLE_USER")]
-    public function cancel(int $id): Response
+    public function cancel(int $id,Request $request): Response
     {
+
+        $valeurSaisie = $request->query->get('saisie');
+
         $trip = $this->tripService->find($id);
         if ($this->getUser() == $trip->getOrganisator() || $this->getUser()->getRoles()) {
-            $this->tripService->cancel($id);
+            if ($valeurSaisie ) {
+                $this->tripService->cancel($id);
+            }
         }
         return $this->redirectToRoute('trip_detail', ['id' => $id]);
+
     }
 
     #[Route('/{id}/publish', name: 'publish')]
