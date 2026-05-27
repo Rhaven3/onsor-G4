@@ -53,7 +53,6 @@ class TripRepository extends ServiceEntityRepository
     }
 
 
-
     public function findTripWithJoin(int $id)
     {
         $qb = $this->createQueryBuilder('t');
@@ -66,7 +65,7 @@ class TripRepository extends ServiceEntityRepository
             ->addSelect('p')
             ->leftJoin('t.organisator', 'o')
             ->addSelect('o')
-            ->leftJoin('t.address','a')
+            ->leftJoin('t.address', 'a')
             ->addSelect('a');
 
         $query = $qb->getQuery();
@@ -91,7 +90,6 @@ class TripRepository extends ServiceEntityRepository
     }
 
 
-
     public function findTripsWithFilters(array $filters = [], $id = null): array
     {
         $dateArchive = new \DateTime('-30 days');
@@ -101,9 +99,15 @@ class TripRepository extends ServiceEntityRepository
             ->addSelect('o')
             ->andWhere('(t.state != :state and t.state != :s2) OR t.state IS NULL')
             ->andWhere('t.endDate > :archiveDate')
-            ->setParameter('state', (string) StateEnum::ARCHIVED->value)
-            ->setParameter('s2', (string) StateEnum::CREATED->value)
+            ->setParameter('state', (string)StateEnum::ARCHIVED->value)
+            ->setParameter('s2', (string)StateEnum::CREATED->value)
             ->setParameter('archiveDate', $dateArchive);
+
+        $qb->distinct()
+            ->leftJoin('t.participants', 'p')
+            ->addSelect('p')
+            ->leftJoin('t.site', 's')
+            ->addSelect('s');
 
         if (!empty($filters['name'])) {
             $qb->andWhere('t.name LIKE :name')
@@ -111,9 +115,7 @@ class TripRepository extends ServiceEntityRepository
         }
 
         if (!empty($filters['site'])) {
-            $qb->join('t.site', 's')
-                ->addSelect('s')
-                ->andWhere('s.id = :siteId')
+            $qb->andWhere('s.id = :siteId')
                 ->setParameter('siteId', $filters['site']);
         }
 
@@ -135,8 +137,7 @@ class TripRepository extends ServiceEntityRepository
 
         if (!empty($filters['notRegister']) && !empty($filters['register'])) {
 
-        }elseif (!empty($filters['notRegister']) || !empty($filters['register'])) {
-            $qb->Join('t.participants', 'p');
+        } elseif (!empty($filters['notRegister']) || !empty($filters['register'])) {
 
             if (!empty($filters['register'])) {
                 $qb->andWhere(':userId MEMBER OF t.participants')
@@ -164,7 +165,8 @@ class TripRepository extends ServiceEntityRepository
      * @param int $nbTrips Nombre de sorties souhaités
      * @return mixed
      */
-    function findNNextTrip(int $nbTrips) {
+    function findNNextTrip(int $nbTrips)
+    {
         $qb = $this
             ->createQueryBuilder('t')
             ->join('t.organisator', 'o')

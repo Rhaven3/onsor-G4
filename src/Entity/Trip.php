@@ -68,6 +68,9 @@ class Trip
     #[ORM\Column]
     private ?int $maxRegistration = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $cancelComment = null;
+
     public function getId(): ?int
     {
         $this->id1 = $this->id;
@@ -226,6 +229,18 @@ class Trip
     public function setMaxRegistration(int $maxRegistration): static
     {
         $this->maxRegistration = $maxRegistration;
+
+        return $this;
+    }
+
+    public function getCancelComment(): ?string
+    {
+        return $this->cancelComment;
+    }
+
+    public function setCancelComment(?string $cancelComment): static
+    {
+        $this->cancelComment = $cancelComment;
 
         return $this;
     }

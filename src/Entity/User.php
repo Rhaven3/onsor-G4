@@ -93,8 +93,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $activate = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $cancelComment = null;
 
     public function getId(): ?int
     {
@@ -306,18 +304,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActivate(bool $activate): static
     {
         $this->activate = $activate;
-
-        return $this;
-    }
-
-    public function getCancelComment(): ?string
-    {
-        return $this->cancelComment;
-    }
-
-    public function setCancelComment(?string $cancelComment): static
-    {
-        $this->cancelComment = $cancelComment;
 
         return $this;
     }
