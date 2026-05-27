@@ -74,6 +74,12 @@ class Trip
         return $this->id1;
     }
 
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+
     public function getName(): ?string
     {
         return $this->name;

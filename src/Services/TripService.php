@@ -66,6 +66,9 @@ class TripService
             $this->entityManager->persist($trip);
             $this->entityManager->flush();
         }
+        else{
+            throw new Exception('Trip already archived');
+        }
 
     }
 
@@ -76,10 +79,13 @@ class TripService
         if (!$trip) {
             throw new Exception('Trip not found');
         }
-        if ( StateEnum::CREATED ) {
+        if ( $trip->getState() == StateEnum::CREATED ) {
             $trip->setState(null);
             $this->entityManager->persist($trip);
             $this->entityManager->flush();
+        }
+        else{
+            throw new Exception('state is not Created');
         }
 
     }
