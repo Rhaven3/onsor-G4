@@ -147,7 +147,7 @@ final class UserController extends AbstractController
     public function userInnactif(UserService $userService, int $id , UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $userService->setInnactif($id,$userRepository );
-        return $this->redirectToRoute('app_user_show_id', ['id' => $id]);
+        return $this->redirectToRoute('trip_list', ['page' => 1]);
     }
 
     #[Route('/user/delete/{id}', name: 'user_delete')]
