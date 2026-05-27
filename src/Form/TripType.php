@@ -22,26 +22,38 @@ class TripType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('startDate')
-            ->add('endDate')
-            ->add('limitRegistrationDate')
+            ->add('name', null, [
+                'label' => 'Nom',
+            ])
+            ->add('startDate', null, [
+                'label' => 'Date de début',
+            ])
+            ->add('endDate', null, [
+                'label' => 'Date de fin',
+            ])
+            ->add('limitRegistrationDate', null, [
+                'label' => 'Date de fin d\'inscription',
+            ])
             ->add('description')
-            ->add('maxRegistration')
+            ->add('maxRegistration', null, [
+                'label' => 'Nombre d\'inscription possible',
+            ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'name',
             ])
             ->add('choiceMethodAddress', ChoiceType::class, [
+                'label' => ' ',
                 'mapped' => false,
                 'choices' => [
-                    'Choisir ' => false,
-                    'Créer' => true,
+                    ' Choisir ' => false,
+                    ' Créer' => true,
                 ],
                 'data' => false,
                 'expanded' => true,
             ])
             ->add('address', EntityType::class, [
+                'label' => 'Adresse',
                 'class' => Address::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Choisisssez une adresse',
