@@ -13,12 +13,12 @@
 
 {% block body %}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {{ form_start(form, {
+            attr: {
+                class: 'space-y-3'
+            }
+        }) }}
         <div class="mt-10 sm:mx-auto w-full lg:max-w-[500px]">
-            {{ form_start(form, {
-                attr: {
-                    class: 'space-y-3'
-                }
-            }) }}
             {{ form_row(form.name) }}
             {{ form_row(form.startDate) }}
             {{ form_row(form.endDate) }}
@@ -32,6 +32,7 @@
             {{ form_row(form.address) }}
             {{ form_row(form.newAddress) }}
             <div class="flex gap-2 mt-10">
+                {{ form_row(form._token) }}
                 <button
                     type="submit"
                     class="flex w-full justify-center rounded-md hover:bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow bg-indigo-500"
@@ -44,8 +45,9 @@
                     </button>
                 {% endif %}
             </div>
-            {{ form_end(form) }}
+
         </div>
+        {{ form_end(form) }}
         {#    Affichage carte Leaflet #}
         <div id="map" class="mt-10 sm:mx-auto md:h-[500px] h-[300px] w-full lg:w-[500px]"></div>
     </div>
