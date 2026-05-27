@@ -51,4 +51,23 @@ class UserService
 
     }
 
+    public function  setInnactif(int $userId, UserRepository $userRepository): void
+    {
+    $user = $userRepository->find($userId);
+    $user->setActivate(0);
+
+    $this->entityManager->persist($user);
+    $this->entityManager->flush();
+
+    }
+
+    public function  deleteUser(int $userId, UserRepository $userRepository): void
+    {
+        $user = $userRepository->find($userId);
+
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+
+    }
+
 }

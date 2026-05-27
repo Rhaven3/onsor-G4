@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class UserController extends AbstractController
 {
@@ -140,4 +141,22 @@ final class UserController extends AbstractController
 
         return $this->redirectToRoute('trip_detail', ['id' => $id]);
     }
+
+    #[Route('/user/innactif/{id}', name: 'user_innactif')]
+    #[IsGranted("ROLE_ADMIN")]
+    public function userInnactif(UserService $userService, int $id , UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+        $userService->setInnactif($id,$userRepository );
+        return $this->redirectToRoute('app_user_show_id', ['id' => $id]);
+    }
+
+    #[Route('/user/delete/{id}', name: 'user_delete')]
+    #[IsGranted("ROLE_ADMIN")]
+    public function userDelete(UserService $userService, int $id , UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+        $userService->deleteUser($id,$userRepository );
+        return $this->redirectToRoute('trip_list', ['page' => 1]);
+    }
+
+
 }

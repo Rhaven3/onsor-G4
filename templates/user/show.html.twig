@@ -66,6 +66,18 @@
                         </a>
                     </div>
                     {% endif %}
+                    {% if is_granted("ROLE_ADMIN")  %}
+                        <a href="{{ path('user_innactif', {id: user.id}) }}" class="flex-1 text-center py-2 border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 bg-white hover:bg-gray-50 transition">
+                            Rendre innactif
+                        </a>
+
+                        <a href="{{ path('user_delete', {id: user.id}) }}" class="flex-1 text-center py-2 border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 bg-white hover:bg-gray-50 transition">
+                            Supprimer
+                        </a>
+
+                    {% endif %}
+
+
                 </div>
             </div>
         </div>
