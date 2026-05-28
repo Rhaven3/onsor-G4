@@ -80,7 +80,7 @@
                             {% if trip.state?.value == 'Créée' %}
                                 <a href="{{ path('trip_publish', {'id': trip.id}) }}"
                                    class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2.5 rounded-lg transition duration-200 shadow-sm text-center">
-                                    Publiée
+                                    Publier
                                 </a>
                             {% endif %}
                         {% elseif app.user in trip.participants and trip.state is null %}
