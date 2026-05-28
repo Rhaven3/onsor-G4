@@ -118,6 +118,8 @@ class UserService
 
         $this->entityManager->persist($user);
     }
+
+
     public function  setInnactif(int $userId, UserRepository $userRepository): void
     {
     $user = $userRepository->find($userId);

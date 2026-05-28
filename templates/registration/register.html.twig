@@ -47,14 +47,11 @@
             {{ form_row(registrationForm.newSite) }}
         </div>
 
-        <script>
-            document.querySelectorAll('input[name="site_choice"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    document.getElementById('site-existing').style.display = this.value === 'existing' ? 'block' : 'none';
-                    document.getElementById('site-new').style.display = this.value === 'new' ? 'block' : 'none';
-                });
-            });
-        </script>
+        {% block javascripts %}
+            {{ parent() }}
+            <script type="module" src="{{ asset('assets/register.js') }}"></script>
+        {% endblock %}
+
         <div class="max-w-sm mx-auto mt-6">
             {{ form_label(registrationForm.photo, 'Photo de profil', {
                 label_attr: {
