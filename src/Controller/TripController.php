@@ -57,8 +57,13 @@ final class TripController extends AbstractController
             $trips = $this->tripService->findByFilter($filters, $id, $page);
         }
         $totalTrips = count($trips);
-
         $maxPage =  ceil($totalTrips /15) ;
+
+        if ($page < 1) {
+            return $this->redirectToRoute('trip_list');
+        } elseif ($page > $maxPage) {
+            return $this->redirectToRoute('trip_list', ['page' => $maxPage]);
+        }
 
         return $this->render('trip/list.html.twig', [
             'trips'        => $trips,
