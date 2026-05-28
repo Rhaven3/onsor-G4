@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="flex justify-center gap-4">
+        <a href="{{ path('app_register_solo') }}"
+           class="block text-center py-4 px-4 border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:text-amber-600 hover:border-amber-200 active:bg-gray-100 transition-all duration-200 shadow-sm"
+        >
+            Inscription unique
+        </a>
+        <a href="{{ path('app_register_import') }}"
+           class="block text-center py-4 px-4 border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:text-amber-600 hover:border-amber-200 active:bg-gray-100 transition-all duration-200 shadow-sm"
+        >
+            Inscription multiple
+        </a>
+    </div>
+{% endblock %}
