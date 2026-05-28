@@ -57,8 +57,13 @@ final class TripController extends AbstractController
             $trips = $this->tripService->findByFilter($filters, $id, $page);
         }
         $totalTrips = count($trips);
-
         $maxPage =  ceil($totalTrips /15) ;
+
+        if ($page < 1) {
+            return $this->redirectToRoute('trip_list');
+        } elseif ($page > $maxPage) {
+            return $this->redirectToRoute('trip_list', ['page' => $maxPage]);
+        }
 
         return $this->render('trip/list.html.twig', [
             'trips'        => $trips,
@@ -97,8 +102,18 @@ final class TripController extends AbstractController
             $address = $form->get('address')->getData();
             if ($AddressHisCreated) {
                 $newAddress = $form->get('newAddress')->getData();
-                $this->entityManager->persist($newAddress);
-                $address = $newAddress;
+                if ($newAddress->getName() !== null && $newAddress->getStreet() !== null && $newAddress->getState() !== null && $newAddress->getCity() !== null
+                && $newAddress->getPostcode() !== null && $newAddress->getLatitude() !== null && $newAddress->getLongitude() !== null) {
+                    $this->entityManager->persist($newAddress);
+                    $address = $newAddress;
+                } else {
+                $this->addFlash('error', 'Les données de la nouvelle adresse sont invalides.');
+                return $this->render('trip/create.html.twig', [
+                    'form' => $form->createView(),
+                    "published" => $trip->getState() === null,
+                ]);
+            }
+
             }
             $trip->setAddress($address);
             $trip->setState(StateEnum::CREATED);

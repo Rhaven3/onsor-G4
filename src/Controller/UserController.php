@@ -25,7 +25,7 @@ final class UserController extends AbstractController
         $user = $userService->getUser($id, $userRepository);
 
         if (!$user) {
-            throw $this->createNotFoundException("It's embarrassing, but your friend doesn't exist.");
+            throw $this->createNotFoundException("C'est embarassant.. Mais votre ami n'existe pas.");
         }
 
         return $this->render('user/show.html.twig', [
@@ -105,7 +105,11 @@ final class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Profil modifié avec succès.');
+
             return $this->redirectToRoute('app_home');
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('error', 'Des informations sont manquantes ou erronées.');
         }
 
         return $this->render('user/update.html.twig', [

@@ -37,7 +37,7 @@ final class AddressController extends AbstractController
     public function update(int $id, Request $request): Response
     {
         $address = $this->addressService->findById($id);
-        $title = 'Modifiée une adresse';
+        $title = 'Modifier une adresse';
         $bouton = 'Modifier';
 
         $form = $this->createForm(AddressType::class, $address);
@@ -62,7 +62,7 @@ final class AddressController extends AbstractController
     public function create( Request $request): Response
     {
         $address = new Address();
-        $title = 'Créée une adresse';
+        $title = 'Créer une adresse';
         $bouton = 'Créer';
 
         $form = $this->createForm(AddressType::class, $address);

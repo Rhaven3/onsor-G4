@@ -16,21 +16,30 @@ class AddressType extends AbstractType
         $builder
             ->add('name', null, [
                 'label' => 'Nom',
+                "required" => true,
             ])
             ->add('street', null, [
                 'label' => 'Rue',
+                "required" => true,
             ])
             ->add('state', null, [
                 'label' => 'Département',
+                "required" => true,
             ])
             ->add('city', null, [
                 'label' => 'Ville',
+                "required" => true,
             ])
             ->add('postcode', null, [
                 'label' => 'Code postal',
+                "required" => true,
             ])
-            ->add('latitude', NumberType::class)
-            ->add('longitude', NumberType::class)
+            ->add('latitude', NumberType::class , [
+                'required' => true,
+            ])
+            ->add('longitude', NumberType::class,[
+                'required' => true,
+            ])
         ;
     }
 
