@@ -61,9 +61,16 @@ class UserService
 
     }
 
-    public function  deleteUser(int $userId, UserRepository $userRepository): void
+    public function  deleteUser(int $userId): void
     {
-        $user = $userRepository->find($userId);
+        $user = $this->userRepository->find($userId);
+        $deletedUser = $this->userRepository->findBy(['username' => 'deleted']);
+
+        if (!$user || !$deletedUser) {
+            throw new \Exception('User not found');
+        }
+
+        $this->tripRepository->updateTripDeleted($user, $deletedUser);
 
         $this->entityManager->remove($user);
         $this->entityManager->flush();

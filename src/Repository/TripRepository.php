@@ -201,6 +201,18 @@ class TripRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    function updateTripDeleted($userId, $deletedUserId)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->update()
+            ->set('t.organisator', ':deletedUser')
+            ->where('t.organisator = :currentUser')
+            ->setParameter('deletedUser', $deletedUserId)
+            ->setParameter('currentUser', $userId)
+            ->getQuery()
+            ->execute();
+    }
+
 //    /**
 //     * @return Trip[] Returns an array of Trip objects
 //     */
