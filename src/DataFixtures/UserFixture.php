@@ -36,6 +36,20 @@ class UserFixture extends Fixture implements OrderedFixtureInterface
         $adminTest->setRoles(['ROLE_ADMIN']);
         $adminTest->setActivate(true);
         $manager->persist($adminTest);
+
+        $deletedUser = new User();
+        $deletedUser->setUsername('deleted');
+        $deletedUser->setPassword(password_hash('deleted', PASSWORD_DEFAULT));
+        $deletedUser->setFirstName('deleted');
+        $deletedUser->setLastName('User');
+        $deletedUser->setEmail('deleted@testadmin.fr');
+        $deletedUser->setMobile('0666777998');
+        $deletedUser->setSite($manager->getRepository(Site::class)->findOneBy(['name' => 'eni']));
+        $deletedUser->setRoles(['ROLE_ADMIN']);
+        $deletedUser->setActivate(false);
+        $manager->persist($deletedUser);
+
+
         $manager->flush();
     }
 

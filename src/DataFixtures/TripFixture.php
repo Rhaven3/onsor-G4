@@ -34,7 +34,7 @@ class TripFixture extends Fixture implements OrderedFixtureInterface
         $manager->flush();
 
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $trip = new Trip();
 
             $fakeStartDate = $faker->dateTimeBetween('now', '+1 year');
