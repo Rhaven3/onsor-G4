@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% embed 'views/form-template.html.twig' with {form : form} %}
+        {% block form_title %}{{title}}{% endblock %}
+        {% block button_submit_label %}{{ bouton }}{% endblock %}
+    {% endembed %}
+{% endblock %}
+
+

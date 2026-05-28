@@ -54,7 +54,7 @@ class Trip
     }
 
     #[ORM\ManyToOne(inversedBy: 'trips')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true,onDelete: 'SET NULL')]
     private ?Address $address = null;
 
     #[ORM\ManyToOne(inversedBy: 'trips')]
