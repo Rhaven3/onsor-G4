@@ -11,7 +11,7 @@
             {# Avatar #}
             <div class="flex flex-col items-center text-center">
                     <img class="w-24 h-24 rounded-full object-cover"
-                         {% if app.user.photo is not null %}
+                         {% if app.user.photo is defined %}
                             src="{{ asset('assets/img/profil/' ~ user.photo) }}"
                          {% else %}
                              src="{{ asset('defaultContent/default_pp_user.jpg') }}"
