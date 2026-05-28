@@ -177,39 +177,46 @@
             </div>
         </div>
 
-        <!-- 3. TABLEAU DES PARTICIPANTS -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="p-6 border-b border-gray-100">
-                <h3 class="text-lg font-bold text-gray-800">Liste des participants inscrits</h3>
-            </div>
+            <!-- 3. TABLEAU DES PARTICIPANTS -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800">Liste des participants inscrits</h3>
+                </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                    <tr class="bg-gray-50 text-xs font-semibold uppercase text-gray-500 border-b border-gray-100">
-                        <th class="py-4 px-6">Pseudo</th>
-                        <th class="py-4 px-6">Nom</th>
-                    </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
-                    {% for participant in trip.participants %}
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="py-4 px-6 font-medium text-blue-600"><a
-                                    href="{{ path('app_user_show_id', {'id': participant.id}) }}">{{ participant.username }}</a>
-                            </td>
-                            <td class="py-4 px-6">{{ participant.firstName }} {{ participant.lastName }}</td>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                        <tr class="bg-gray-50 text-xs font-semibold uppercase text-gray-500 border-b border-gray-100">
+                            <th class="py-4 px-6">Pseudo</th>
+                            <th class="py-4 px-6">Nom</th>
                         </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="2" class="py-6 px-6 text-center text-gray-400 italic">
-                                Aucun participant inscrit pour le moment.
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                        {% if app.user %}
+                        {% for participant in trip.participants %}
+                            <tr class="hover:bg-gray-50/50 transition">
+                                <td class="py-4 px-6 font-medium text-blue-600"><a
+                                        href="{{ path('app_user_show_id', {'id': participant.id}) }}">{{ participant.username }}</a>
+                                </td>
+                                <td class="py-4 px-6">{{ participant.firstName }} {{ participant.lastName }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="py-6 px-6 text-center text-gray-400 italic">
+                                    Aucun participant inscrit pour le moment.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="py-6 px-6 text-center text-gray-400 italic">
+                                    Vous devez être connecté pour accéder à la liste des participants.
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-
     </div>
 {% endblock %}
