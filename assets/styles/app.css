@@ -25,7 +25,6 @@
     100% {
         opacity: 0;
         scale: 80%;
-        pointer-events: none;
     }
 }
 
@@ -33,4 +32,9 @@
     animation-name: apparition-flash-message;
     animation-duration: 3s;
     opacity: 1;
+    z-index: 2;
+}
+
+#map {
+    z-index: 1;
 }

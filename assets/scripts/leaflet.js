@@ -45,7 +45,6 @@ function markerWithInput(lat, long) {
     console.log("Type de la variable latitude : " + typeof lat);
     console.log("Type de la variable longitude : " + typeof long);
     if ((lat !== null && typeof lat === "number") && (long !== null && typeof long === "number")) {
-        console.log("J'arrive ici !");
         replaceMarker(lat, long);
         map.flyTo([lat, long]);
     }
