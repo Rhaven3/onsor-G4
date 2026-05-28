@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Mot de passe{% endblock %}
+
+{% block body %}
+
+<div class="mx-auto w-full max-w-[700px] mt-10">
+    <p>
+        Si un compte comprenant votre email existe, un courriel contenant un lien pour changer de mot de passe vous sera envoyé.
+        Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+    </p>
+    <br>
+    <p>Si vous ne recevez aucun email, vérifié vos spam, c'est écrit dans la bible, sinon <a href="{{ path('app_forgot_password_request') }}">réessayer</a>.</p>
+</div>
+{% endblock %}
