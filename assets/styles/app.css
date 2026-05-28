@@ -1,6 +1,36 @@
 @import "tailwindcss";
 
+/*----- CSS personalisé -----*/
+
 #form-error > ul {
     list-style: disc;
     margin-left: 30px;
+}
+
+/*--- Animation FlashMessage ---*/
+
+@keyframes apparition-flash-message {
+    0%{
+        opacity: 0;
+        scale: 80%;
+    }
+    20% {
+        opacity: 1;
+        scale: 100%;
+    }
+    80% {
+        opacity: 1;
+        scale: 100%;
+    }
+    100% {
+        opacity: 0;
+        scale: 80%;
+        pointer-events: none;
+    }
+}
+
+.flash-message {
+    animation-name: apparition-flash-message;
+    animation-duration: 3s;
+    opacity: 1;
 }
