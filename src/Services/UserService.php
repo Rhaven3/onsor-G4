@@ -118,7 +118,30 @@ class UserService
 
         $this->entityManager->persist($user);
     }
+    public function  setInnactif(int $userId, UserRepository $userRepository): void
+    {
+    $user = $userRepository->find($userId);
+    $user->setActivate(0);
 
+    $this->entityManager->persist($user);
+    $this->entityManager->flush();
+
+    }
+
+    public function  deleteUser(int $userId): void
+    {
+        $user = $this->userRepository->find($userId);
+        $deletedUser = $this->userRepository->findBy(['username' => 'deleted']);
+
+        if (!$user || !$deletedUser) {
+            throw new \Exception('User not found');
+        }
+
+        $this->tripRepository->updateTripDeleted($user, $deletedUser);
+
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+
+    }
 
 }
-
