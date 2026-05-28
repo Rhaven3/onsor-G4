@@ -43,6 +43,13 @@ class RegistrationFormType extends AbstractType
                 'class' => Site::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Choisir un site',
+                'required' => false,
+                'mapped' => true,
+            ])
+            ->add('newSite', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Nouveau site',
             ])
             ->add('email')
             ->add('plainPassword', PasswordType::class, [

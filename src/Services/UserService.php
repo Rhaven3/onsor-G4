@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entity\User;
 use App\Enum\StateEnum;
+use App\Repository\SiteRepository;
 use App\Repository\TripRepository;
 use App\Repository\UserRepository;
 use DateTime;
@@ -13,7 +14,13 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
 {
-    public function __construct(private EntityManagerInterface $entityManager,private UserRepository $userRepository,private TripRepository $tripRepository)
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private UserRepository $userRepository,
+        private TripRepository $tripRepository,
+        private SiteRepository $siteRepository,
+        private UserPasswordHasherInterface $passwordHasher,
+        )
     {
     }
 
@@ -53,57 +60,26 @@ class UserService
 
     }
 
-}
-
-class UserImporter
-{
-    private EntityManagerInterface $em;
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher)
+    public function importUsersFromExcel(string $filePath): array
     {
-        $this->em = $em;
-        $this->passwordHasher = $passwordHasher;
-    }
-
-    public function importFromExcel(string $filePath): array
-    {
-        $report = [
-            'success' => 0,
-            'errors' => [],
-        ];
-
-
-        //Charge le fichier Excel et capte les erreurs
+        $report = ['success' => 0, 'errors' => []];
 
         try {
             $spreadsheet = IOFactory::load($filePath);
-            $worksheet = $spreadsheet->getActiveSheet();
-            $rows = $worksheet->toArray();
-            array_shift($rows); // On saute l'en-tête
-
-            // Traite chaque ligne de l'excel
+            $rows = $spreadsheet->getActiveSheet()->toArray();
+            array_shift($rows); // saute l'en-tête
 
             foreach ($rows as $i => $row) {
                 try {
                     $this->processRow($row);
                     $report['success']++;
                 } catch (\Exception $e) {
-                    $report['errors'][] = [
-                        'line' => $i + 2, // +2 car on a sauté l'en-tête et on commence à 0
-                        'message' => $e->getMessage(),
-                    ];
+                    $report['errors'][] = ['line' => $i + 2, 'message' => $e->getMessage()];
                 }
             }
-
-            // Fini l'import
-
-            $this->em->flush();
+            $this->entityManager->flush();
         } catch (\Exception $e) {
-            $report['errors'][] = [
-                'line' => 0,
-                'message' => 'Erreur de lecture du fichier : ' . $e->getMessage(),
-            ];
+            $report['errors'][] = ['line' => 0, 'message' => 'Erreur fichier : ' . $e->getMessage()];
         }
 
         return $report;
@@ -111,33 +87,38 @@ class UserImporter
 
     private function processRow(array $row): void
     {
-        // Adapte les indices selon ton fichier Excel
-        $email = $row[0] ?? null;
-        $password = $row[1] ?? null;
-        $firstName = $row[2] ?? null;
-        $lastName = $row[3] ?? null;
-        $roles = json_decode($row[4] ?? '[]', true) ?: [];
+        [$email, $username, $firstName, $lastName, $mobile, $password, $siteName] = array_pad($row, 7, null);
 
-        if (!$email || !$password) {
-            throw new \Exception('Email ou mot de passe manquant.');
+        if (!$email || !$password || !$username || !$firstName || !$lastName || !$mobile) {
+            throw new \Exception('Champ obligatoire manquant.');
         }
 
-        // Vérifie si l'email existe déjà
-        $existingUser = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
-        if ($existingUser) {
-            throw new \Exception('Un utilisateur avec cet email existe déjà.');
+        if ($this->entityManager->getRepository(User::class)->findOneBy(['email' => $email])) {
+            throw new \Exception("Email $email déjà utilisé.");
+        }
+
+        $site = $siteName
+            ? $this->siteRepository->findOneBy(['name' => $siteName])
+            : null;
+
+        if (!$site) {
+            throw new \Exception("Site '$siteName' introuvable.");
         }
 
         $user = new User();
         $user->setEmail($email);
+        $user->setUsername($username);
         $user->setFirstName($firstName);
         $user->setLastName($lastName);
-        $user->setRoles($roles);
+        $user->setMobile($mobile);
+        $user->setSite($site);
+        $user->setRoles(['ROLE_USER']);
+        $user->setActivate(true);
         $user->setPassword($this->passwordHasher->hashPassword($user, $password));
 
-        $this->em->persist($user);
+        $this->entityManager->persist($user);
     }
+
+
 }
-
-
 

@@ -22,6 +22,7 @@ class UserImportFormType extends AbstractType
                         'mimeTypes' => [
                             'text/csv',
                             'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
                         ],
                         'mimeTypesMessage' => 'Veuillez uploader un fichier CSV ou Excel valide.',
                     ]),
