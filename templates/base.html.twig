@@ -10,7 +10,6 @@
     {% endblock %}
 
     {% block javascripts %}
-
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
 
@@ -20,14 +19,11 @@
         <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
     {% endif %}
-
 </head>
 
-<!-- Utilisation de flex-col et min-h-screen pour un footer qui reste TOUJOURS en bas sans casser le contenu -->
 <body class="flex flex-col min-h-screen bg-slate-100 text-gray-800 antialiased">
 
 <header class="bg-gray-900 text-white shadow-md">
-    <!-- Zone Titre / Logo -->
     <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 text-center sm:text-left">
         <a href="{{ path('app_home') }}" class="inline-block hover:opacity-90 transition">
             <h1 class="font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-blue-400">Onsor</h1>
@@ -35,67 +31,140 @@
         <p class="mt-1 text-sm sm:text-base text-gray-400 italic">Le site d'organisation des sorties de l'ENI</p>
     </div>
 
-    <!-- Barre de Navigation -->
     <nav class="border-t border-b border-gray-800 bg-gray-950">
-        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <!-- Sur mobile : empilé verticalement / Sur PC : aligné horizontalement -->
-            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14 sm:h-auto">
 
-                <!-- Liens de gauche (Navigation principale) -->
-                <ul class="flex flex-wrap items-stretch border-b border-gray-800 sm:border-b-0">
-                    <li class="flex">
-                        <a href="{{ path('app_home') }}" class="px-4 py-3 sm:py-4 text-sm font-medium text-gray-200 hover:bg-gray-800 hover:text-white transition flex items-center">Accueil</a>
-                    </li>
-                    <li class="flex">
-                        <a href="{{ path('trip_list', {'page': 1}) }}" class="px-4 py-3 sm:py-4 text-sm font-medium text-gray-200 hover:bg-gray-800 hover:text-white transition flex items-center">Sorties</a>
-                    </li>
-                </ul>
+                <div class="flex items-center sm:hidden">
+                    <button id="mobile-menu-button" type="button"
+                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none transition"
+                            aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Ouvrir le menu</span>
+                        <svg id="hamburger-icon" class="block h-6 w-6" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                        </svg>
+                        <svg id="close-icon" class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                    <span class="ml-2 text-sm font-medium text-gray-400 sm:hidden">Menu</span>
+                </div>
 
-                <!-- Liens de droite (Compte utilisateur) -->
-                <ul class="flex items-stretch bg-gray-900/40 sm:bg-transparent">
-                    {% if app.user %}
-                        <li class="flex flex-1 sm:flex-initial">
-                            <span class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-gray-300 transition flex items-center justify-center">Bonjour {{ app.user.firstName }}</span>
+                <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                    <ul class="flex items-stretch space-x-1">
+                        <li class="flex">
+                            <a href="{{ path('app_home') }}"
+                               class="px-4 py-4 text-sm font-medium text-gray-200 hover:bg-gray-800 hover:text-white transition flex items-center">Accueil</a>
                         </li>
-                        <li class="flex flex-1 sm:flex-initial border-l border-gray-800">
-                            <a href="{{ path('app_user_show_id', {id : app.user.id}) }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition flex items-center justify-center">Profil</a>
+                        <li class="flex">
+                            <a href="{{ path('trip_list', {'page': 1}) }}"
+                               class="px-4 py-4 text-sm font-medium text-gray-200 hover:bg-gray-800 hover:text-white transition flex items-center">Sorties</a>
                         </li>
-                        <li class="flex flex-1 sm:flex-initial border-l border-gray-800">
-                            <a href="{{ path('app_logout') }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-red-400 hover:bg-red-950/30 hover:text-red-300 transition flex items-center justify-center">Déconnexion</a>
-                        </li>
-                    {% else %}
-                        <li class="flex flex-1 sm:flex-initial">
-                            <a href="{{ path('app_login') }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-blue-400 hover:bg-gray-800 hover:text-blue-300 transition flex items-center justify-center">Connexion</a>
-                        </li>
-                    {% endif %}
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li class="flex flex-1 sm:flex-initial border-l border-gray-800">
-                            <a href="{{ path('app_register') }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition flex items-center justify-center">Inscription</a>
-                        </li>
-                        <li class="flex flex-1 sm:flex-initial border-l border-gray-800">
-                            <a href="{{ path('address_list') }}" class="w-full text-center px-4 py-3 sm:py-4 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition flex items-center justify-center">Adresse</a>
-                        </li>
-                    {% endif %}
-                </ul>
+                    </ul>
 
+                    <ul class="flex items-stretch space-x-1">
+                        {% if app.user %}
+                            <li class="flex">
+                                <span
+                                    class="px-4 py-4 text-sm font-medium text-gray-400 flex items-center">Bonjour {{ app.user.firstName }}</span>
+                            </li>
+                            <li class="flex border-l border-gray-800">
+                                <a href="{{ path('app_user_show_id', {id : app.user.id}) }}"
+                                   class="px-4 py-4 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition flex items-center">Profil</a>
+                            </li>
+                            <li class="flex border-l border-gray-800">
+                                <a href="{{ path('app_logout') }}"
+                                   class="px-4 py-4 text-sm font-medium text-red-400 hover:bg-red-950/30 hover:text-red-300 transition flex items-center">Déconnexion</a>
+                            </li>
+                        {% else %}
+                            <li class="flex">
+                                <a href="{{ path('app_login') }}"
+                                   class="px-4 py-4 text-sm font-medium text-blue-400 hover:bg-gray-800 hover:text-blue-300 transition flex items-center">Connexion</a>
+                            </li>
+                        {% endif %}
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="flex border-l border-gray-800">
+                                <a href="{{ path('app_register') }}"
+                                   class="px-4 py-4 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition flex items-center">Inscription</a>
+                            </li>
+                            <li class="flex border-l border-gray-800">
+                                <a href="{{ path('address_list') }}"
+                                   class="px-4 py-4 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition flex items-center">Adresse</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="hidden sm:hidden bg-gray-900 border-t border-gray-800" id="mobile-menu">
+            <div class="space-y-1 px-2 pt-2 pb-3">
+                <a href="{{ path('app_home') }}"
+                   class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:bg-gray-800 hover:text-white transition">Accueil</a>
+                <a href="{{ path('trip_list', {'page': 1}) }}"
+                   class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:bg-gray-800 hover:text-white transition">Sorties</a>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="border-t border-gray-800 my-2 pt-2">
+                        <span class="block px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Administration</span>
+                        <a href="{{ path('app_register') }}"
+                           class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition">Inscription</a>
+                        <a href="{{ path('address_list') }}"
+                           class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition">Adresse</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="border-t border-gray-800 pt-2 pb-3 px-4 bg-gray-950">
+                {% if app.user %}
+                    <div class="space-y-1">
+                        <a href="{{ path('app_user_show_id', {id : app.user.id}) }}"
+                           class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:bg-gray-800 hover:text-white transition">Mon
+                            Profil</a>
+                        <a href="{{ path('app_logout') }}"
+                           class="block px-3 py-2 rounded-md text-base font-medium text-red-400 hover:bg-red-950/20 transition">Déconnexion</a>
+                    </div>
+                {% else %}
+                    <a href="{{ path('app_login') }}"
+                       class="block w-full text-center px-4 py-2 rounded-md text-base font-medium text-blue-400 bg-gray-900 hover:bg-gray-800 transition">Connexion</a>
+                {% endif %}
             </div>
         </div>
     </nav>
 </header>
 
-<!-- Conteneur principal flexible -->
 <main class="flex-grow">
     <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {% block body %}{% endblock %}
     </div>
 </main>
 
-<!-- Footer calé tout en bas -->
 <footer class="bg-gray-950 text-gray-400 text-xs sm:text-sm py-6 border-t border-gray-900 text-center">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         &copy; {{ "now" | date("Y") }} Les abrutis du Groupe 4 - ENI École Informatique. Tous droits réservés.
     </div>
 </footer>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        menuButton.addEventListener('click', () => {
+            const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+            menuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('hidden');
+            hamburgerIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+    });
+</script>
+
 </body>
-</html>
+</html>s

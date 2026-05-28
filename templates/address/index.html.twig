@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h1 class="text-xl font-bold text-gray-900 tracking-tight">Gestion des adresses</h1>
+        <a href="{{ path('address_create') }}" class="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Ajouter une adresse
+        </a>
+    </div>
+
+    <div class="shadow-sm rounded-lg border border-gray-200 bg-white overflow-hidden">
+        <table class="hidden md:table min-w-full divide-y divide-gray-200 text-sm">
+            <thead class="bg-gray-50 text-left">
+            <tr>
+                <th class="px-4 py-3 font-semibold text-gray-900">Nom</th>
+                <th class="px-4 py-3 font-semibold text-gray-900">Ville</th>
+                <th class="px-4 py-3 font-semibold text-gray-900">Code Postal</th>
+                <th class="px-4 py-3 font-semibold text-gray-900 text-right">Actions</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+            {% for address in addressS %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-4 py-3 font-medium text-gray-900">{{ address.name }}</td>
+                    <td class="px-4 py-3 text-gray-700">{{ address.city }}</td>
+                    <td class="px-4 py-3 text-gray-700">{{ address.postcode }}</td>
+                    <td class="px-4 py-3 text-right">
+                        <a href="{{ path('address_update', {id: address.id}) }}" class="inline-block rounded bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700 transition-colors">
+                            Modifier
+                        </a>
+                        <a href="{{ path('address_delete', {id: address.id}) }}" class="inline-block rounded bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700 transition-colors">
+                            Supprimer
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="px-4 py-8 text-center text-gray-500 italic">
+                        Aucune adresse trouvée.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="block md:hidden divide-y divide-gray-200">
+            {% for address in addressS %}
+                <div class="p-4 space-y-2 bg-white">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Nom</span>
+                        <span class="text-sm font-medium text-gray-900">{{ address.name }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Ville</span>
+                        <span class="text-sm text-gray-700">{{ address.city }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Code Postal</span>
+                        <span class="text-sm text-gray-700">{{ address.postcode }}</span>
+                    </div>
+
+                    <div class="pt-3 grid grid-cols-2 gap-2">
+                        <a href="{{ path('address_update', {id: address.id}) }}" class="flex items-center justify-center rounded bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+                            Modifier
+                        </a>
+                        <a href="{{ path('address_delete', {id: address.id}) }}" class="flex items-center justify-center rounded bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700 transition-colors">
+                            Supprimer
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="p-8 text-center text-gray-500 italic text-sm">
+                    Aucune adresse trouvée.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
