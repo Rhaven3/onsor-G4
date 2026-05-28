@@ -171,7 +171,7 @@ final class TripController extends AbstractController
     }
 
     #[Route('/{id}/publish', name: 'publish')]
-    #[IsGranted("WISH_PUBLISH")]
+    #[IsGranted("TRIP_PUBLISH")]
     public function publish(int $id): Response
     {
         $trip = $this->tripService->find($id);

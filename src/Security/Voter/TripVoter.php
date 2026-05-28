@@ -12,7 +12,7 @@ final class TripVoter extends Voter
 {
     public const EDIT = 'TRIP_EDIT';
     public const DELETE = 'TRIP_DELETE';
-    public const PUBLIH = 'TRIP_PUBLIH';
+    public const PUBLISH = 'TRIP_PUBLISH';
 
     public function __construct(private Security $security)
     {
@@ -22,7 +22,7 @@ final class TripVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::DELETE, self::PUBLIH])
+        return in_array($attribute, [self::EDIT, self::DELETE, self::PUBLISH])
             && $subject instanceof \App\Entity\Trip;
     }
 
@@ -39,7 +39,7 @@ final class TripVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case self::PUBLIH:
+            case self::PUBLISH:
             case self::EDIT:
                 if ($subject->getUser() === $user) {
                     return true;
