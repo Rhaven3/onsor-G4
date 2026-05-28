@@ -23,6 +23,27 @@
 
 <body class="flex flex-col min-h-screen bg-slate-100 text-gray-800 antialiased">
 
+{# --- FlashMessage --- #}
+<div id="flash-message-container" class="fixed top-[230px] md:top-[200px] left-1/2 cursor-default transform -translate-x-1/2 z-50 w-90 space-y-2">
+    {% for label, messages in app.flashes(['success', 'warning', 'error', 'info']) %}
+        {% for message in messages %}
+            <div
+                class="flash-message p-4 mb-2 rounded-lg shadow-lg text-white text-center
+                {% if label == 'success' %}bg-green-500
+                {% elseif label == 'warning' %}bg-yellow-500
+                {% elseif label == 'error' %}bg-red-500
+                {% elseif label == 'info' %}bg-blue-500
+                {% endif %}"
+                role="alert"
+                aria-live="polite"
+            >
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+
+
 <header class="bg-gray-900 text-white shadow-md">
     <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 text-center sm:text-left">
         <a href="{{ path('app_home') }}" class="inline-block hover:opacity-90 transition">
