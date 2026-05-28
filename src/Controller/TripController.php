@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/trip', name: 'trip_')]
 final class TripController extends AbstractController
 {
-    public function __construct(private TripService $tripService, private EntityManagerInterface $entityManager,)
+    public function __construct(private TripService $tripService, private EntityManagerInterface $entityManager)
     {
     }
 
@@ -27,6 +27,7 @@ final class TripController extends AbstractController
     {
         return $this->extracted($request, $page, 'list');
     }
+
     #[Route('/listCreated/{page?1}', name: 'listCreated', requirements: ['page' => '\d+'], methods: ['GET', 'POST'])]
     public function listCreated(Request $request, int $page): Response
     {
@@ -57,7 +58,7 @@ final class TripController extends AbstractController
             $trips = $this->tripService->findByFilter($filters, $id, $page);
         }
         $totalTrips = count($trips);
-        $maxPage =  ceil($totalTrips /15) ;
+        $maxPage = ceil($totalTrips / 15);
 
         if ($page < 1) {
             return $this->redirectToRoute('trip_list');
@@ -66,22 +67,22 @@ final class TripController extends AbstractController
         }
 
         return $this->render('trip/list.html.twig', [
-            'trips'        => $trips,
-            'filterForm'   => $filterForm->createView(),
-            'currentPage'  => $page,
+            'trips' => $trips,
+            'filterForm' => $filterForm->createView(),
+            'currentPage' => $page,
             'currentRoute' => 'trip_' . $context,
-            'formAction'   => $this->generateUrl('trip_list', ['page' => 1]),
-            'maxPage'      => $maxPage,
+            'formAction' => $this->generateUrl('trip_list', ['page' => 1]),
+            'maxPage' => $maxPage,
         ]);
     }
 
     #[Route('/create', name: 'create', methods: ['POST', 'GET'])]
     #[Route('/{id}/update', name: 'update', requirements: ['id' => '\d+'])]
     #[IsGranted("ROLE_USER")]
-    public function create(Request $request, int $id=null): Response
+    public function create(Request $request, int $id = null): Response
     {
         $trip = new Trip();
-        if($id) {
+        if ($id) {
             $trip = $this->tripService->find($id);
             if (!$trip) {
                 throw $this->createNotFoundException('Cette sortie n\'existe pas');
@@ -95,40 +96,49 @@ final class TripController extends AbstractController
          * @var $AddressHisCreated boolean
          */
         $AddressHisCreated = $form->get('choiceMethodAddress')->getData();
-        if ($form->isSubmitted() && $form->isValid()) {
-            $isPublished = $request->request->get('published');
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $isPublished = $request->request->get('published');
 
 
-            $address = $form->get('address')->getData();
-            if ($AddressHisCreated) {
-                $newAddress = $form->get('newAddress')->getData();
-                if ($newAddress->getName() !== null && $newAddress->getStreet() !== null && $newAddress->getState() !== null && $newAddress->getCity() !== null
-                && $newAddress->getPostcode() !== null && $newAddress->getLatitude() !== null && $newAddress->getLongitude() !== null) {
-                    $this->entityManager->persist($newAddress);
-                    $address = $newAddress;
+                $address = $form->get('address')->getData();
+                if ($AddressHisCreated) {
+                    $newAddress = $form->get('newAddress')->getData();
+                    if ($newAddress->getName() !== null && $newAddress->getStreet() !== null && $newAddress->getState() !== null && $newAddress->getCity() !== null
+                        && $newAddress->getPostcode() !== null && $newAddress->getLatitude() !== null && $newAddress->getLongitude() !== null) {
+                        $this->entityManager->persist($newAddress);
+                        $address = $newAddress;
+                    } else {
+                        $this->addFlash('error', 'Les données de la nouvelle adresse sont invalides.');
+                        return $this->render('trip/create.html.twig', [
+                            'form' => $form->createView(),
+                            "published" => $trip->getState() === null,
+                        ]);
+                    }
+
+                }
+                $trip->setAddress($address);
+                $trip->setState(StateEnum::CREATED);
+                if ($isPublished === 'true') {
+                    $trip->setState(null);
+                }
+                $trip->setOrganisator($this->getUser());
+                $this->entityManager->persist($trip);
+                $this->entityManager->flush();
+                if ($trip->getId() !== 0) {
+                    $this->addFlash('success', 'Sortie créée avec succès !');
                 } else {
-                $this->addFlash('error', 'Les données de la nouvelle adresse sont invalides.');
-                return $this->render('trip/create.html.twig', [
-                    'form' => $form->createView(),
-                    "published" => $trip->getState() === null,
-                ]);
+                    $this->addFlash('success', 'Sortie mise à jour avec succès !');
+                }
+                return $this->redirectToRoute('trip_detail', ['id' => $trip->getId()]);
+            } else {
+                $this->addFlash('error', 'Données du formulaire invalides ou incomplètes.');
             }
-
-            }
-            $trip->setAddress($address);
-            $trip->setState(StateEnum::CREATED);
-            if($isPublished === 'true') {
-                $trip->setState(null);
-            }
-            $trip->setOrganisator($this->getUser());
-            $this->entityManager->persist($trip);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'Trip created!');
-            return $this->redirectToRoute('trip_detail', ['id' => $trip->getId()]);
-        }
+    }
         return $this->render('trip/create.html.twig', [
             'form' => $form,
-            "published" =>$trip->getState() === null,
+            "published" => $trip->getState() === null,
         ]);
     }
 
@@ -137,7 +147,7 @@ final class TripController extends AbstractController
     {
         $trip = $this->tripService->findByIdJoin($id);
 
-        if(empty($trip)) throw $this->createNotFoundException('Sortie non trouvée');
+        if (empty($trip)) throw $this->createNotFoundException('Sortie non trouvée');
 
         return $this->render('trip/detail.html.twig', [
             'trip' => $trip[0],
@@ -147,14 +157,14 @@ final class TripController extends AbstractController
 
     #[Route('/{id}/cancel', name: 'cancel')]
     #[IsGranted("ROLE_USER")]
-    public function cancel(int $id,Request $request): Response
+    public function cancel(int $id, Request $request): Response
     {
 
         $valeurSaisie = $request->query->get('saisie');
 
         $trip = $this->tripService->find($id);
         if ($this->getUser() == $trip->getOrganisator() || $this->getUser()->getRoles()) {
-                $this->tripService->cancel($id,$valeurSaisie);
+            $this->tripService->cancel($id, $valeurSaisie);
         }
         return $this->redirectToRoute('trip_detail', ['id' => $id]);
 

@@ -15,6 +15,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {{ form_start(form, {
             attr: {
+                id: 'form',
                 class: 'grid grid-cols-1 md:grid-cols-2 gap-6 space-y-3'
             }
         }) }}
@@ -34,12 +35,15 @@
             <div class="flex gap-2 mt-10">
                 {{ form_row(form._token) }}
                 <button
+                    id="button-save"
                     type="submit"
                     class="flex w-full justify-center rounded-md hover:bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow bg-indigo-500"
                 >Enregistrer
                 </button>
                 {% if published %}
-                    <button name="published" value="true"
+                    <button
+                        id="button-publish"
+                        name="published" value="true"
                             class="bg-green-500 hover:bg-green-700 flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow"
                     >Publier
                     </button>
@@ -53,6 +57,7 @@
     </div>
     <script src="{{ asset('scripts/leaflet.js') }}"></script>
     <script src="{{ asset('scripts/create-trip.js') }}"></script>
+    <script src="{{ asset('scripts/page-submit-block.js') }}"></script>
 {% endblock %}
 
 {% block title %}
