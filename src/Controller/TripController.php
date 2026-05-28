@@ -104,12 +104,10 @@ final class TripController extends AbstractController
                 $newAddress = $form->get('newAddress')->getData();
                 if ($newAddress->getName() !== null && $newAddress->getStreet() !== null && $newAddress->getState() !== null && $newAddress->getCity() !== null
                 && $newAddress->getPostcode() !== null && $newAddress->getLatitude() !== null && $newAddress->getLongitude() !== null) {
-//                    dd($newAddress);
                     $this->entityManager->persist($newAddress);
                     $address = $newAddress;
                 } else {
                 $this->addFlash('error', 'Les données de la nouvelle adresse sont invalides.');
-                // On peut réafficher le formulaire ici
                 return $this->render('trip/create.html.twig', [
                     'form' => $form->createView(),
                     "published" => $trip->getState() === null,
