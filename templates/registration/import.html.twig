@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Import utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
+            Import utilisateurs (CSV/Excel)
+        </h2>
+    </div>
+
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        {{ form_start(registrationForm, {
+            attr: {
+                class: 'space-y-6',
+                enctype: 'multipart/form-data'
+            }
+        }) }}
+
+        <div class="max-w-sm mx-auto mt-6">
+            {{ form_label(registrationForm.file, 'Fichier CSV/Excel', {
+                label_attr: {
+                    class: 'text-slate-900 text-sm font-medium mb-2 block'
+                }
+            }) }}
+            {{ form_widget(registrationForm.file, {
+                attr: {
+                    class: 'w-full text-slate-600 font-medium text-sm border border-slate-200 rounded-md cursor-pointer
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
+                    file:cursor-pointer file:border-0 file:py-2 file:px-3 file:mr-4
+                    file:bg-gray-100 hover:file:bg-gray-200 file:text-slate-500'
+                }
+            }) }}
+            <p class="text-xs text-slate-500 mt-2">CSV ou Excel uniquement, 5Mo max.</p>
+            {{ form_errors(registrationForm.file) }}
+        </div>
+
+        {{ form_errors(registrationForm) }}
+
+        <div>
+            <button
+                type="submit"
+                class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500"
+            >
+                Importer
+            </button>
+        </div>
+
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}
