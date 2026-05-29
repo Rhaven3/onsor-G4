@@ -7,7 +7,8 @@
 
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider m-1">
+                    <span
+                        class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider m-1">
                         Site : {{ trip.site.name }}
                     </span>
 
@@ -34,7 +35,8 @@
                         {% endif %}
                     {% endif %}
 
-                    <span class="{{ badgeClass }} text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                    <span
+                        class="{{ badgeClass }} text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
                         ETAT : {{ statusLabel }}
                     </span>
 
@@ -45,7 +47,8 @@
                     <div>
                         <p class="text-xs text-gray-500 font-medium">Organisé par</p>
                         <p class="text-sm font-semibold text-gray-800">
-                            <a href="{{ path('app_user_show_id', {'id': trip.organisator.id}) }}" class="hover:underline">
+                            <a href="{{ path('app_user_show_id', {'id': trip.organisator.id}) }}"
+                               class="hover:underline">
                                 {{ trip.organisator.firstName }} {{ trip.organisator.LastName }}
                             </a>
                         </p>
@@ -103,7 +106,8 @@
 
             <div class="lg:col-span-2 space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">Détails de la sortie</h2>
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">Détails de la
+                        sortie</h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600">
                         <div class="flex flex-col gap-1">
@@ -114,9 +118,11 @@
                             <span class="text-xs font-semibold text-gray-400 uppercase">Fin de la sortie</span>
                             <span class="font-medium text-gray-800">🏁 {{ trip.endDate | date('d/m/Y') }}</span>
                         </div>
-                        <div class="flex flex-col gap-1 sm:col-span-2 p-3 bg-amber-50 border border-amber-100 rounded-xl">
+                        <div
+                            class="flex flex-col gap-1 sm:col-span-2 p-3 bg-amber-50 border border-amber-100 rounded-xl">
                             <span class="text-xs font-semibold text-amber-700 uppercase">Clôture des inscriptions</span>
-                            <span class="font-semibold text-amber-900">⏰ {{ trip.limitRegistrationDate | date('d/m/Y') }}</span>
+                            <span
+                                class="font-semibold text-amber-900">⏰ {{ trip.limitRegistrationDate | date('d/m/Y') }}</span>
                         </div>
                     </div>
 
@@ -133,25 +139,30 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center">
                     <span class="text-xs font-semibold text-gray-400 uppercase block mb-1">Places disponibles</span>
                     <div class="text-3xl font-black text-gray-900 my-2">
-                        {{ trip.participants|length }} <span class="text-gray-400 text-lg font-normal">/ {{ trip.maxRegistration }}</span>
+                        {{ trip.participants|length }} <span
+                            class="text-gray-400 text-lg font-normal">/ {{ trip.maxRegistration }}</span>
                     </div>
                     <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden mt-3">
                         {% set percentage = (trip.participants|length / trip.maxRegistration) * 100 %}
-                        <div class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: {{ percentage }}%"></div>
+                        <div class="bg-blue-600 h-full rounded-full transition-all duration-500"
+                             style="width: {{ percentage }}%"></div>
                     </div>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">📍 Lieu du rendez-vous</h2>
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">📍 Lieu du
+                        rendez-vous</h2>
                     <div class="space-y-3 text-sm">
                         {% if trip.address %}
                             <div>
                                 <span class="font-semibold text-gray-800 block">{{ trip.address.name }}</span>
                                 <span class="text-gray-600 block">{{ trip.address.street }}</span>
-                                <span class="text-gray-600 block">{{ trip.address.city }} {{ trip.address.postcode }}</span>
+                                <span
+                                    class="text-gray-600 block">{{ trip.address.city }} {{ trip.address.postcode }}</span>
                             </div>
 
-                            <div class="pt-3 border-t border-gray-50 grid grid-cols-2 gap-2 text-xs text-gray-400 font-mono">
+                            <div
+                                class="pt-3 border-t border-gray-50 grid grid-cols-2 gap-2 text-xs text-gray-400 font-mono">
                                 <div>Lat: {{ trip.address.latitude ?? 'N/A' }}</div>
                                 <div>Long: {{ trip.address.longitude ?? 'N/A' }}</div>
                             </div>
@@ -160,47 +171,46 @@
                         {% endif %}
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100">
+                <h3 class="text-lg font-bold text-gray-800">Liste des participants inscrits</h3>
+            </div>
 
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-6 border-b border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-800">Liste des participants inscrits</h3>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                            <tr class="bg-gray-50 text-xs font-semibold uppercase text-gray-500 border-b border-gray-100">
-                                <th class="py-4 px-6">Pseudo</th>
-                                <th class="py-4 px-6">Nom</th>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                    <tr class="bg-gray-50 text-xs font-semibold uppercase text-gray-500 border-b border-gray-100">
+                        <th class="py-4 px-6">Pseudo</th>
+                        <th class="py-4 px-6">Nom</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                    {% if app.user %}
+                        {% for participant in trip.participants %}
+                            <tr class="hover:bg-gray-50/50 transition">
+                                <td class="py-4 px-6 font-medium text-blue-600">
+                                    <a href="{{ path('app_user_show_id', {'id': participant.id}) }}">{{ participant.username }}</a>
+                                </td>
+                                <td class="py-4 px-6">{{ participant.firstName }} {{ participant.lastName }}</td>
                             </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
-                            {% if app.user %}
-                                {% for participant in trip.participants %}
-                                    <tr class="hover:bg-gray-50/50 transition">
-                                        <td class="py-4 px-6 font-medium text-blue-600">
-                                            <a href="{{ path('app_user_show_id', {'id': participant.id}) }}">{{ participant.username }}</a>
-                                        </td>
-                                        <td class="py-4 px-6">{{ participant.firstName }} {{ participant.lastName }}</td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td colspan="2" class="py-6 px-6 text-center text-gray-400 italic">
-                                            Aucun participant inscrit pour le moment.
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            {% else %}
-                                <tr>
-                                    <td colspan="2" class="py-6 px-6 text-center text-gray-400 italic">
-                                        Vous devez être connecté pour accéder à la liste des participants.
-                                    </td>
-                                </tr>
-                            {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="py-6 px-6 text-center text-gray-400 italic">
+                                    Aucun participant inscrit pour le moment.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="2" class="py-6 px-6 text-center text-gray-400 italic">
+                                Vous devez être connecté pour accéder à la liste des participants.
+                            </td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
