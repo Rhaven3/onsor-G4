@@ -205,6 +205,9 @@
                                                     <a href="{{ path('trip_withdraw',{'id' : trip.id}) }}"
                                                        class="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 transition">Se
                                                         désister</a>
+                                                {% elseif trip.maxRegistration == trip.participants|length %}
+                                                    <span
+                                                       class="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 bg-gray-100 transition">S'inscrire</span>
                                                 {% else %}
                                                     <a href="{{ path('trip_register',{'id' : trip.id}) }}"
                                                        class="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-semibold text-green-700 bg-green-50 hover:bg-green-100 transition">S'inscrire</a>

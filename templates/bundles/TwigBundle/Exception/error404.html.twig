@@ -3,9 +3,14 @@
 
 {% block body %}
 
-    <h1 class="text-red-200"><strong>Erreur 404</strong></h1>
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <h1 class="mt-10 mb-10 text-center text-2xl font-bold tracking-tight text-red-500"><strong>Erreur 404</strong>
+        </h1>
 
-    <p>La ressource demandée n'a pas été trouvée.</p>
-    <p>Erreur : {{ exception.message }}</p>
+        <div class="p-10">
+            <p>La ressource demandée n'a pas été trouvée.</p>
+            <p>Erreur : {{ exception.message }}</p>
+        </div>
+    </div>
 
 {% endblock %}
