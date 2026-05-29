@@ -310,7 +310,8 @@
 
                     <span
                         class="text-sm font-medium text-gray-500 bg-gray-100 px-4 py-2 rounded-xl border border-gray-200">
-                        Page {{ currentPage }}
+                        <span class="hidden md:block">Page {{ currentPage }}</span>
+                        <span class="block md:hidden">{{ currentPage }}</span>
                     </span>
 
                     {# Affiche "Suivant" si la page actuelle contient pile le nombre limite d'éléments #}
