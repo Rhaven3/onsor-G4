@@ -9,6 +9,7 @@ use App\Form\TripType;
 use App\Repository\TripRepository;
 use App\Services\TripService;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -182,6 +183,9 @@ final class TripController extends AbstractController
     }
 
 
+    /**
+     * @throws Exception
+     */
     #[IsGranted("ROLE_ADMIN")]
     #[Route('/{id}/archive', name: 'archive')]
     public function archive(int $id): Response

@@ -56,6 +56,9 @@ class TripService
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function archive(int $id): void
     {
         $trip = $this->tripRepository->find($id);
@@ -63,7 +66,7 @@ class TripService
         if (!$trip) {
             throw new Exception('Trip not found');
         }
-        if ($trip->getState() !== StateEnum::ARCHIVED or  $trip->getState() == null) {
+        if ($trip->getState() !== StateEnum::ARCHIVED) {
             $trip->setState(StateEnum::ARCHIVED);
             $this->entityManager->persist($trip);
             $this->entityManager->flush();
@@ -71,7 +74,6 @@ class TripService
         else{
             throw new Exception('Trip already archived');
         }
-
     }
 
     public function publish(int $id): void
