@@ -66,7 +66,7 @@ class TripService
         if (!$trip) {
             throw new Exception('Trip not found');
         }
-        if ($trip->getState() !== StateEnum::ARCHIVED or  $trip->getState() == null) {
+        if ($trip->getState() !== StateEnum::ARCHIVED) {
             $trip->setState(StateEnum::ARCHIVED);
             $this->entityManager->persist($trip);
             $this->entityManager->flush();
