@@ -49,13 +49,14 @@ final class UserController extends AbstractController
 
     #[Route('/user/{id}/update', name: 'app_user_update')]
     public function update(
-        int $id,
-        UserRepository $userRepository,
-        EntityManagerInterface $entityManager,
-        Request $request,
-        UserService $userService,
+        int                         $id,
+        UserRepository              $userRepository,
+        EntityManagerInterface      $entityManager,
+        Request                     $request,
+        UserService                 $userService,
         UserPasswordHasherInterface $passwordHasher
-    ): Response {
+    ): Response
+    {
         // Vérifie que l'utilisateur connecté est bien celui dont l'ID est dans l'URL
         $currentUser = $this->getUser();
         if ($currentUser->getId() !== $id) {
@@ -122,51 +123,48 @@ final class UserController extends AbstractController
     public function registerTrip(UserService $userService, int $id): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $userRegistered = $userService->registration($id, $this->getUser());
-        if ($userRegistered) {
-            $this->addFlash('success', 'Votre inscription a bien été prise en compte.');
-            return $this->redirectToRoute('trip_detail', ['id' => $id]);
-        } else {
-            $this->addFlash('error', "Vous n'avez pas pu être inscrit à cette sortie.");
-            return $this->redirectToRoute('trip_detail', ['id' => $id]);
-        }
-    }
-
-    #[Route('/user/tripWithdraw/{id}', name: 'trip_withdraw', requirements: ['id' => '\d+'])]
-    public function withdrawTrip(UserService $userService, int $id): Response
-    {
-        $userService->withdraw($id, $this->getUser());
-
-        $this->addFlash('success', 'Vous vous êtes désisté de la sortie avec succès.');
-
-        return $this->redirectToRoute('trip_list', ['page' => 1]);
-    }
-
-    #[Route('/user/tripWithdrawDetail/{id}', name: 'trip_withdrawDetail')]
-    public function withdrawTripDetail(UserService $userService, int $id, TripService $tripService, Request $request): ?Response
-    {
-        $userService->withdraw($id, $this->getUser());
-        $trips = $tripService->findByFilter();
-        $filterForm = $this->createForm(FilterTripType::class);
-        $filterForm->handleRequest($request);
-
+        $this->addFlash($userRegistered["status"], $userRegistered["message"]);
         return $this->redirectToRoute('trip_detail', ['id' => $id]);
     }
 
+
+#[
+Route('/user/tripWithdraw/{id}', name: 'trip_withdraw', requirements: ['id' => '\d+'])]
+    public function withdrawTrip(UserService $userService, int $id): Response
+{
+    $userService->withdraw($id, $this->getUser());
+
+    $this->addFlash('success', 'Vous vous êtes désisté de la sortie avec succès.');
+
+    return $this->redirectToRoute('trip_list', ['page' => 1]);
+}
+
+    #[Route('/user/tripWithdrawDetail/{id}', name: 'trip_withdrawDetail')]
+    public function withdrawTripDetail(UserService $userService, int $id, TripService $tripService, Request $request): ?Response
+{
+    $userService->withdraw($id, $this->getUser());
+    $trips = $tripService->findByFilter();
+    $filterForm = $this->createForm(FilterTripType::class);
+    $filterForm->handleRequest($request);
+
+    return $this->redirectToRoute('trip_detail', ['id' => $id]);
+}
+
     #[Route('/user/innactif/{id}', name: 'user_innactif')]
     #[IsGranted("ROLE_ADMIN")]
-    public function userInnactif(UserService $userService, int $id , UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
-    {
-        $userService->setInnactif($id,$userRepository );
-        return $this->redirectToRoute('trip_list', ['page' => 1]);
-    }
+    public function userInnactif(UserService $userService, int $id, UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
+{
+    $userService->setInnactif($id, $userRepository);
+    return $this->redirectToRoute('trip_list', ['page' => 1]);
+}
 
     #[Route('/user/delete/{id}', name: 'user_delete')]
     #[IsGranted("ROLE_ADMIN")]
-    public function userDelete(UserService $userService, int $id , UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
-    {
-        $userService->deleteUser($id,$userRepository );
-        return $this->redirectToRoute('trip_list', ['page' => 1]);
-    }
+    public function userDelete(UserService $userService, int $id, UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
+{
+    $userService->deleteUser($id, $userRepository);
+    return $this->redirectToRoute('trip_list', ['page' => 1]);
+}
 
 
 }

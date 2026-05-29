@@ -25,17 +25,19 @@ class UserService
     }
 
 
-    public function registration (int $idTrip, User $user):bool {
+    public function registration (int $idTrip, User $user):array {
         $today = new DateTime('now');
         $trip = $this->tripRepository->find($idTrip);
-        $isRegister = false;
+        $isRegister = ['status' => 'error',
+            'message'=> 'Vous n\'avez pas pu être inscrit à cette sortie.'];
 
         if ($trip->getState() == null && $trip->getLimitRegistrationDate() > $today
             && $trip->getMaxRegistration() > $trip->getParticipants()->count()) {
             $trip->addParticipant($user);
             $this->entityManager->persist($trip);
             $this->entityManager->flush();
-            $isRegister = true;
+            $isRegister = ['status' => 'success',
+                'message' => 'Votre inscription a bien été prise en compte.'];
         }
 
         return $isRegister;
