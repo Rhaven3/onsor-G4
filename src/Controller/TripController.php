@@ -171,14 +171,14 @@ final class TripController extends AbstractController
     }
 
     #[Route('/{id}/publish', name: 'publish')]
-    #[IsGranted("TRIP_PUBLISH")]
-    public function publish(int $id): Response
+    #[IsGranted("TRIP_PUBLISH", 'trip')]
+    public function publish(Trip $trip): Response
     {
-        $trip = $this->tripService->find($id);
+//        $trip = $this->tripService->find($id);
         if ($this->getUser() == $trip->getOrganisator()) {
-            $this->tripService->publish($id);
+            $this->tripService->publish($trip->getId());
         }
-        return $this->redirectToRoute('trip_detail', ['id' => $id]);
+        return $this->redirectToRoute('trip_detail', ['id' => $trip->getId()]);
     }
 
 
