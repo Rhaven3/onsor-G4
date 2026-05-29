@@ -56,6 +56,9 @@ class TripService
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function archive(int $id): void
     {
         $trip = $this->tripRepository->find($id);
@@ -71,7 +74,6 @@ class TripService
         else{
             throw new Exception('Trip already archived');
         }
-
     }
 
     public function publish(int $id): void
