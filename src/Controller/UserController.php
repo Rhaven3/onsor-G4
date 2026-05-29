@@ -121,8 +121,14 @@ final class UserController extends AbstractController
     #[Route('/user/tripRegister/{id}', name: 'trip_register')]
     public function registerTrip(UserService $userService, int $id): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        $userService->registration($id, $this->getUser());
-        return $this->redirectToRoute('trip_detail', ['id' => $id]);
+        $userRegistered = $userService->registration($id, $this->getUser());
+        if ($userRegistered) {
+            $this->addFlash('success', 'Votre inscription a bien été prise en compte.');
+            return $this->redirectToRoute('trip_detail', ['id' => $id]);
+        } else {
+            $this->addFlash('error', "Vous n'avez pas pu être inscrit à cette sortie.");
+            return $this->redirectToRoute('trip_detail', ['id' => $id]);
+        }
     }
 
     #[Route('/user/tripWithdraw/{id}', name: 'trip_withdraw', requirements: ['id' => '\d+'])]
